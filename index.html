@@ -1,1 +1,798 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы клиентов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary-color: #4CAF50;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 20px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .review-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .review-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .review-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .review-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .review-service {
+            display: inline-block;
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--primary-color);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .stars {
+            color: #FFD700;
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .review-text {
+            margin-top: 15px;
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        .review-response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f8e9;
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 6px;
+        }
+
+        .review-response strong {
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            max-width: 600px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            animation: slideInUp 0.4s ease;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            font-size: 30px;
+            color: #ddd;
+            margin-right: 5px;
+            transition: var(--transition);
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #FFD700;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #e8f5e9;
+            color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .no-reviews {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+        }
+
+        .no-reviews i {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .reviews-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                max-width: calc(100% - 40px);
+            }
+        }
+
+        footer {
+            background-color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 60px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        footer p {
+            color: var(--text-light);
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px);
+        }
+
+        .spinner {
+            margin: 40px auto;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(33, 150, 243, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {transform: rotate(360deg);}
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Отзывы наших клиентов</h1>
+            <p>Узнайте, что говорят о нас клиенты и оставьте свой отзыв о нашей работе.</p>
+            <button class="btn btn-primary" id="open-review-form">Оставить отзыв</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="filters">
+            <button class="filter-btn active" data-rating="all">Все отзывы</button>
+            <button class="filter-btn" data-rating="5">5 звезд</button>
+            <button class="filter-btn" data-rating="4">4 звезды</button>
+            <button class="filter-btn" data-rating="3">3 звезды</button>
+            <button class="filter-btn" data-rating="2">2 звезды</button>
+            <button class="filter-btn" data-rating="1">1 звезда</button>
+        </div>
+
+        <div class="spinner" id="spinner"></div>
+        
+        <div class="reviews-container" id="reviews-container">
+            <!-- Отзывы будут загружены из JSON файла через JavaScript -->
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления отзыва -->
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Оставить отзыв</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="review-form">
+                    <div class="form-group">
+                        <label for="review-name">Ваше имя</label>
+                        <input type="text" id="review-name" class="form-control" required>
+                        <div class="error-message" id="name-error">Пожалуйста, введите ваше имя</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="review-service">Какой услугой вы воспользовались?</label>
+                        <input type="text" id="review-service" class="form-control" required>
+                        <div class="error-message" id="service-error">Пожалуйста, укажите услугу</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Оценка</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" required>
+                            <label for="star5"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1"><i class="fas fa-star"></i></label>
+                        </div>
+                        <div class="error-message" id="rating-error">Пожалуйста, поставьте оценку</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="review-text">Ваш отзыв</label>
+                        <textarea id="review-text" class="form-control" required></textarea>
+                        <div class="error-message" id="text-error">Пожалуйста, напишите свой отзыв</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="review-token">Код подтверждения (если есть)</label>
+                        <input type="text" id="review-token" class="form-control">
+                        <small>Код подтверждения предоставляется после завершения заказа.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                    <div class="success-message" id="success-message">
+                        Спасибо за ваш отзыв! Он будет опубликован после модерации.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-to-top" id="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Система управления заказами. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Загрузка отзывов из JSON файла
+        async function loadReviews() {
+            try {
+                // Показываем спиннер
+                document.getElementById('spinner').style.display = 'block';
+                
+                // Загружаем отзывы из JSON файла
+                const response = await fetch('reviews.json');
+                const data = await response.json();
+                
+                // Скрываем спиннер
+                document.getElementById('spinner').style.display = 'none';
+                
+                // Сортируем отзывы по дате (новые сверху)
+                const reviews = data.reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Отображаем отзывы
+                displayReviews(reviews);
+                
+                // Добавляем анимацию появления для карточек
+                setTimeout(() => {
+                    document.querySelectorAll('.review-card').forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                        }, index * 100);
+                    });
+                }, 300);
+            } catch (error) {
+                console.error('Ошибка загрузки отзывов:', error);
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('reviews-container').innerHTML = `
+                    <div class="no-reviews">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3>Отзывы не найдены</h3>
+                        <p>В данный момент отзывы отсутствуют или произошла ошибка загрузки.</p>
+                        <button class="btn" onclick="loadReviews()">Повторить загрузку</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Отображение отзывов
+        function displayReviews(reviews, filter = 'all') {
+            const container = document.getElementById('reviews-container');
+            container.innerHTML = '';
+            
+            // Фильтруем отзывы, если выбран фильтр
+            let filteredReviews = reviews;
+            if (filter !== 'all') {
+                filteredReviews = reviews.filter(review => review.rating === parseInt(filter));
+            }
+            
+            // Если отзывов нет
+            if (filteredReviews.length === 0) {
+                container.innerHTML = `
+                    <div class="no-reviews">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3>Отзывы не найдены</h3>
+                        <p>В данный момент отзывы с выбранным фильтром отсутствуют.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Создаем карточку для каждого отзыва
+            filteredReviews.forEach(review => {
+                // Получаем инициалы для аватара
+                const initials = review.name
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase();
+                
+                // Формируем звезды для отображения рейтинга
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= review.rating) {
+                        stars += '<i class="fas fa-star"></i>';
+                    } else {
+                        stars += '<i class="far fa-star"></i>';
+                    }
+                }
+                
+                // Форматируем дату
+                const date = new Date(review.date);
+                const formattedDate = date.toLocaleDateString('ru-RU', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                // Создаем HTML для карточки отзыва
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML = `
+                    <div class="review-header">
+                        <div class="review-avatar">${initials}</div>
+                        <div class="review-info">
+                            <h3>${review.name}</h3>
+                            <div class="review-date">${formattedDate}</div>
+                            <div class="review-service">${review.service}</div>
+                        </div>
+                    </div>
+                    <div class="stars">${stars}</div>
+                    <div class="review-text">${review.text}</div>
+                    ${review.response ? `
+                        <div class="review-response">
+                            <strong>Ответ:</strong>
+                            ${review.response}
+                        </div>
+                    ` : ''}
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Инициализация после загрузки страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загружаем отзывы
+            loadReviews();
+            
+            // Настраиваем модальное окно
+            const modal = document.getElementById('review-modal');
+            const openModalBtn = document.getElementById('open-review-form');
+            const closeBtn = document.querySelector('.close');
+            
+            openModalBtn.addEventListener('click', function() {
+                modal.style.display = 'block';
+            });
+            
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Настраиваем фильтры
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Удаляем активный класс у всех кнопок
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Добавляем активный класс нажатой кнопке
+                    this.classList.add('active');
+                    
+                    // Применяем фильтр
+                    const rating = this.getAttribute('data-rating');
+                    fetch('reviews.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            displayReviews(data.reviews, rating);
+                            // Анимация появления карточек
+                            setTimeout(() => {
+                                document.querySelectorAll('.review-card').forEach((card, index) => {
+                                    setTimeout(() => {
+                                        card.classList.add('visible');
+                                    }, index * 100);
+                                });
+                            }, 100);
+                        })
+                        .catch(error => console.error('Ошибка загрузки отзывов:', error));
+                });
+            });
+            
+            // Обработка формы отзыва
+            const reviewForm = document.getElementById('review-form');
+            reviewForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Проверка валидности формы
+                let isValid = true;
+                
+                // Проверка имени
+                const name = document.getElementById('review-name').value.trim();
+                if (!name) {
+                    document.getElementById('name-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('name-error').style.display = 'none';
+                }
+                
+                // Проверка услуги
+                const service = document.getElementById('review-service').value.trim();
+                if (!service) {
+                    document.getElementById('service-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('service-error').style.display = 'none';
+                }
+                
+                // Проверка рейтинга
+                const rating = document.querySelector('input[name="rating"]:checked');
+                if (!rating) {
+                    document.getElementById('rating-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('rating-error').style.display = 'none';
+                }
+                
+                // Проверка текста отзыва
+                const text = document.getElementById('review-text').value.trim();
+                if (!text) {
+                    document.getElementById('text-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('text-error').style.display = 'none';
+                }
+                
+                // Если форма валидна, отправляем отзыв
+                if (isValid) {
+                    // В реальном приложении здесь был бы код для отправки отзыва на сервер
+                    // Поскольку это демо, просто показываем сообщение об успехе
+                    document.getElementById('success-message').style.display = 'block';
+                    
+                    // Сбрасываем форму через 3 секунды
+                    setTimeout(() => {
+                        reviewForm.reset();
+                        document.getElementById('success-message').style.display = 'none';
+                        modal.style.display = 'none';
+                    }, 3000);
+                }
+            });
+            
+            // Настраиваем кнопку прокрутки вверх
+            const scrollBtn = document.getElementById('scroll-to-top');
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollBtn.classList.add('visible');
+                } else {
+                    scrollBtn.classList.remove('visible');
+                }
+            });
+            
+            scrollBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

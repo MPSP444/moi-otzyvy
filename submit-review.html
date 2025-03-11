@@ -401,22 +401,64 @@
                 return ids.length > 0 ? (Math.max(...ids) + 1).toString() : "1";
             }
             
-            // Функция для получения текущих отзывов
+            
+            
             async function getReviews() {
                 try {
-                    // Получаем информацию о файле напрямую из GitHub API, чтобы узнать SHA
-                    const fileInfoResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy/contents/reviews.json');
+                    // Проверяем правильный URL репозитория
+                    console.log('Получение данных репозитория...');
+                    const repoInfoResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy');
+                    
+                    if (!repoInfoResponse.ok) {
+                        console.error(`Ошибка доступа к репозиторию: ${repoInfoResponse.status}`);
+                        console.error(await repoInfoResponse.text());
+                        
+                        // Пробуем получить локальную копию как запасной вариант
+                        const localResponse = await fetch('reviews.json');
+                        if (localResponse.ok) {
+                            console.log('Использую локальную копию файла отзывов');
+                            const data = await localResponse.json();
+                            return data;
+                        } else {
+                            throw new Error(`Не удалось получить ни удаленный, ни локальный файл отзывов`);
+                        }
+                    }
+                    
+                    // Получаем список файлов в корне репозитория для проверки
+                    console.log('Получение списка файлов...');
+                    const contentsResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy/contents/');
+                    
+                    if (!contentsResponse.ok) {
+                        throw new Error(`Ошибка получения содержимого репозитория: ${contentsResponse.status}`);
+                    }
+                    
+                    const contents = await contentsResponse.json();
+                    console.log('Файлы в репозитории:', contents.map(file => file.name));
+                    
+                    // Ищем файл reviews.json
+                    const reviewsFile = contents.find(file => file.name === 'reviews.json');
+                    
+                    if (!reviewsFile) {
+                        throw new Error('Файл reviews.json не найден в репозитории');
+                    }
+                    
+                    // Получаем содержимое файла
+                    console.log('Получение файла reviews.json...');
+                    const fileInfoResponse = await fetch(reviewsFile.url);
+                    
                     if (!fileInfoResponse.ok) {
                         throw new Error(`Ошибка получения информации о файле: ${fileInfoResponse.status}`);
                     }
+                    
                     const fileInfo = await fileInfoResponse.json();
                     
                     // Декодируем содержимое файла из base64
                     const content = atob(fileInfo.content);
                     const reviewsData = JSON.parse(content);
                     
-                    // Сохраняем SHA для последующего обновления
+                    // Сохраняем SHA и URL для последующего обновления
                     reviewsData._sha = fileInfo.sha;
+                    reviewsData._url = fileInfo.url;
                     
                     return reviewsData;
                 } catch (error) {
@@ -425,21 +467,30 @@
                 }
             }
             
-            // Функция для обновления отзывов на GitHub
             async function updateReviewsOnGitHub(reviewsData, newReview) {
                 try {
-                    console.log('Получение информации о файле reviews.json...');
+                    console.log('Начало обновления файла reviews.json...');
+                    
+                    // Проверяем, есть ли SHA файла
+                    if (!reviewsData._sha) {
+                        throw new Error('Отсутствует SHA файла, необходимый для обновления');
+                    }
+                    
+                    // URL для обновления файла
+                    const updateUrl = reviewsData._url || 'https://api.github.com/repos/MPSP444/moi-otzyvy/contents/reviews.json';
+                    console.log(`Используется URL для обновления: ${updateUrl}`);
+                    
                     // Добавляем новый отзыв к существующим
-                    reviewsData.reviews.push(newReview);
+                    const updatedReviews = { reviews: [...reviewsData.reviews, newReview] };
                     
                     // Кодируем обновленные данные в base64
-                    const jsonContent = JSON.stringify(reviewsData, null, 2);
+                    const jsonContent = JSON.stringify(updatedReviews, null, 2);
                     const encoded = btoa(unescape(encodeURIComponent(jsonContent)));
                     
                     console.log('Отправка обновленного файла на GitHub...');
                     
                     // Отправляем запрос на обновление файла
-                    const updateResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy/contents/reviews.json', {
+                    const updateResponse = await fetch(updateUrl, {
                         method: 'PUT',
                         headers: {
                             'Accept': 'application/vnd.github.v3+json',

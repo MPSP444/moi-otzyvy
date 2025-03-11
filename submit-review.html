@@ -229,6 +229,27 @@
             text-decoration: underline;
         }
 
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -259,6 +280,7 @@
         <div id="order-info" class="order-info">
             <h3>Информация о вашем заказе</h3>
             <p id="order-service">Услуга: <span>Загрузка...</span></p>
+            <p id="order-id">Заказ №: <span>Загрузка...</span></p>
             <p id="order-date">Дата выполнения: <span>Загрузка...</span></p>
         </div>
 
@@ -295,8 +317,14 @@
                 
                 <input type="hidden" id="review-token" value="">
                 <input type="hidden" id="review-service" value="">
+                <input type="hidden" id="review-order-id" value="">
                 
                 <button type="submit" class="btn">Отправить отзыв</button>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Отправка отзыва...</p>
+                </div>
             </form>
             
             <div class="success-message" id="success-message">
@@ -310,6 +338,7 @@
                 <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #c62828; margin-bottom: 15px;"></i>
                 <h3>Ошибка</h3>
                 <p id="error-message">Произошла ошибка при отправке отзыва. Пожалуйста, попробуйте еще раз позже.</p>
+                <button class="btn" id="retry-btn" style="margin-top: 20px; background-color: #c62828;">Попробовать снова</button>
             </div>
         </div>
         
@@ -326,13 +355,27 @@
             const token = urlParams.get('token') || '';
             const orderId = urlParams.get('order') || '';
             const service = urlParams.get('service') || '';
+            const clientName = urlParams.get('name') || '';
             
             // Если есть информация о заказе, заполняем поля
             if (service) {
-                document.getElementById('review-service').value = service;
-                document.querySelector('#order-service span').textContent = service;
+                const decodedService = decodeURIComponent(service);
+                document.getElementById('review-service').value = decodedService;
+                document.querySelector('#order-service span').textContent = decodedService;
             } else {
                 document.getElementById('order-info').style.display = 'none';
+            }
+            
+            // Заполняем номер заказа
+            if (orderId) {
+                document.getElementById('review-order-id').value = orderId;
+                document.querySelector('#order-id span').textContent = orderId;
+            }
+            
+            // Заполняем имя клиента, если оно передано в URL
+            if (clientName) {
+                const decodedName = decodeURIComponent(clientName);
+                document.getElementById('review-name').value = decodedName;
             }
             
             // Устанавливаем токен в скрытое поле
@@ -347,9 +390,77 @@
             });
             document.querySelector('#order-date span').textContent = formattedDate;
             
+            // Функция для сохранения отзыва
+            async function submitReview(reviewData) {
+                try {
+                    // Показываем индикатор загрузки
+                    document.getElementById('loading').style.display = 'block';
+                    
+                    // Получаем текущие отзывы
+                    const response = await fetch('reviews.json');
+                    if (!response.ok) {
+                        throw new Error(`Не удалось получить текущие отзывы: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Создаем новый отзыв
+                    const newId = getNewId(data.reviews);
+                    const newReview = {
+                        id: newId,
+                        name: reviewData.name,
+                        date: reviewData.date,
+                        rating: reviewData.rating,
+                        service: reviewData.service,
+                        text: reviewData.text,
+                        response: "",
+                        order: reviewData.orderId
+                    };
+                    
+                    // Добавляем новый отзыв к существующим
+                    data.reviews.push(newReview);
+                    
+                    // Скрываем форму, показываем сообщение об успехе
+                    document.getElementById('review-form').style.display = 'none';
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('success-message').style.display = 'block';
+                    
+                    // Сохраняем отзыв в localStorage для демонстрации
+                    saveReviewLocally(newReview);
+                    
+                    return true;
+                    
+                } catch (error) {
+                    console.error('Ошибка при отправке отзыва:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error-container').style.display = 'block';
+                    document.getElementById('error-message').textContent = 
+                        `Произошла ошибка при отправке отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
+                    return false;
+                }
+            }
+            
+            // Генерация нового ID
+            function getNewId(reviews) {
+                if (!reviews || reviews.length === 0) return "1";
+                const ids = reviews.map(r => parseInt(r.id)).filter(id => !isNaN(id));
+                return ids.length > 0 ? (Math.max(...ids) + 1).toString() : "1";
+            }
+            
+            // Сохранение отзыва локально (для демонстрации)
+            function saveReviewLocally(review) {
+                try {
+                    const savedReviews = JSON.parse(localStorage.getItem('savedReviews') || '[]');
+                    savedReviews.push(review);
+                    localStorage.setItem('savedReviews', JSON.stringify(savedReviews));
+                } catch (e) {
+                    console.error('Ошибка при сохранении отзыва локально:', e);
+                }
+            }
+            
             // Обработка отправки формы
             const reviewForm = document.getElementById('review-form');
-            reviewForm.addEventListener('submit', function(event) {
+            reviewForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
                 
                 // Валидация формы
@@ -391,20 +502,25 @@
                         text: text,
                         service: document.getElementById('review-service').value || "Не указано",
                         token: document.getElementById('review-token').value,
-                        orderId: orderId,
+                        orderId: document.getElementById('review-order-id').value || orderId,
                         date: new Date().toISOString().split('T')[0]
                     };
                     
-                    // В реальном приложении здесь был бы код для отправки отзыва на сервер
                     console.log('Отправка отзыва:', reviewData);
                     
-                    // Имитация отправки на сервер
-                    setTimeout(() => {
-                        // Скрываем форму и показываем сообщение об успехе
-                        reviewForm.style.display = 'none';
-                        document.getElementById('success-message').style.display = 'block';
-                    }, 1000);
+                    // Отправляем отзыв
+                    const success = await submitReview(reviewData);
+                    
+                    if (!success) {
+                        console.error('Не удалось отправить отзыв');
+                    }
                 }
+            });
+            
+            // Обработчик кнопки "Попробовать снова"
+            document.getElementById('retry-btn').addEventListener('click', function() {
+                document.getElementById('error-container').style.display = 'none';
+                document.getElementById('review-form').style.display = 'block';
             });
         });
     </script>

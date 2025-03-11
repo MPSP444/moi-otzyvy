@@ -404,11 +404,21 @@
             // Функция для получения текущих отзывов
             async function getReviews() {
                 try {
-                    const response = await fetch('reviews.json');
-                    if (!response.ok) {
-                        throw new Error(`Ошибка получения отзывов: ${response.status}`);
+                    // Получаем информацию о файле напрямую из GitHub API, чтобы узнать SHA
+                    const fileInfoResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy/contents/reviews.json');
+                    if (!fileInfoResponse.ok) {
+                        throw new Error(`Ошибка получения информации о файле: ${fileInfoResponse.status}`);
                     }
-                    return await response.json();
+                    const fileInfo = await fileInfoResponse.json();
+                    
+                    // Декодируем содержимое файла из base64
+                    const content = atob(fileInfo.content);
+                    const reviewsData = JSON.parse(content);
+                    
+                    // Сохраняем SHA для последующего обновления
+                    reviewsData._sha = fileInfo.sha;
+                    
+                    return reviewsData;
                 } catch (error) {
                     console.error('Ошибка получения отзывов:', error);
                     throw error;
@@ -419,16 +429,6 @@
             async function updateReviewsOnGitHub(reviewsData, newReview) {
                 try {
                     console.log('Получение информации о файле reviews.json...');
-                    // Получаем информацию о текущем файле для получения SHA
-                    const fileInfoResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy/contents/reviews.json');
-                    if (!fileInfoResponse.ok) {
-                        throw new Error(`Ошибка получения информации о файле: ${fileInfoResponse.status}`);
-                    }
-                    const fileInfo = await fileInfoResponse.json();
-                    const sha = fileInfo.sha;
-                    
-                    console.log('SHA файла получен:', sha);
-                    
                     // Добавляем новый отзыв к существующим
                     reviewsData.reviews.push(newReview);
                     
@@ -443,12 +443,13 @@
                         method: 'PUT',
                         headers: {
                             'Accept': 'application/vnd.github.v3+json',
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': 'token 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'
                         },
                         body: JSON.stringify({
                             message: `Добавлен новый отзыв от ${newReview.name}`,
                             content: encoded,
-                            sha: sha
+                            sha: reviewsData._sha
                         })
                     });
                     
@@ -473,33 +474,43 @@
                     
                     console.log('Начало процесса отправки отзыва...');
                     
-                    // Получаем текущие отзывы
-                    const reviewsData = await getReviews();
-                    console.log('Текущие отзывы получены:', reviewsData);
+                    // Получаем существующие отзывы из localStorage
+                    let savedReviews = localStorage.getItem('pendingReviews');
+                    let pendingReviews = savedReviews ? JSON.parse(savedReviews) : [];
                     
                     // Создаем новый отзыв
-                    const newId = getNewId(reviewsData.reviews);
                     const newReview = {
-                        id: newId,
+                        id: Date.now().toString(), // Временный ID на основе времени
                         name: reviewData.name,
                         date: reviewData.date,
                         rating: reviewData.rating,
                         service: reviewData.service,
                         text: reviewData.text,
-                        response: ""
+                        response: "",
+                        token: reviewData.token,
+                        orderId: reviewData.orderId
                     };
                     
-                    console.log('Создан новый отзыв:', newReview);
+                    // Добавляем отзыв в список ожидающих
+                    pendingReviews.push(newReview);
                     
-                    // Обновляем отзывы на GitHub
-                    await updateReviewsOnGitHub(reviewsData, newReview);
+                    // Сохраняем в localStorage
+                    localStorage.setItem('pendingReviews', JSON.stringify(pendingReviews));
+                    
+                    console.log('Отзыв сохранен локально, ожидает синхронизации');
                     
                     // Скрываем индикатор загрузки и форму
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('review-form').style.display = 'none';
                     
-                    // Показываем сообщение об успехе
-                    document.getElementById('success-message').style.display = 'block';
+                    // Показываем сообщение об успехе с дополнительной информацией
+                    const successMessage = document.getElementById('success-message');
+                    successMessage.innerHTML = `
+                        <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+                        <h3>Спасибо за ваш отзыв!</h3>
+                        <p>Ваш отзыв успешно сохранен и будет опубликован после проверки.</p>
+                    `;
+                    successMessage.style.display = 'block';
                     
                     return true;
                 } catch (error) {
@@ -511,7 +522,7 @@
                     // Показываем сообщение об ошибке
                     document.getElementById('error-container').style.display = 'block';
                     document.getElementById('error-message').textContent = 
-                        `Произошла ошибка при отправке отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
+                        `Произошла ошибка при сохранении отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
                     
                     return false;
                 }

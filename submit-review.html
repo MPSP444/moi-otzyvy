@@ -525,43 +525,43 @@
                     
                     console.log('Начало процесса отправки отзыва...');
                     
-                    // Получаем существующие отзывы из localStorage
-                    let savedReviews = localStorage.getItem('pendingReviews');
-                    let pendingReviews = savedReviews ? JSON.parse(savedReviews) : [];
+                    // URL вашего Google Apps Script веб-приложения
+                    const apiUrl = 'https://script.google.com/macros/s/AKfycbwboQEXgWaFAIr9MgXUk6ool_qPTUcgjpLYYuIpRODnZne0GIB_hKrNT4JPg3G33J_zng/exec';
                     
-                    // Создаем новый отзыв
-                    const newReview = {
-                        id: Date.now().toString(), // Временный ID на основе времени
+                    // Подготавливаем данные для отправки
+                    const data = {
                         name: reviewData.name,
-                        date: reviewData.date,
-                        rating: reviewData.rating,
-                        service: reviewData.service,
+                        rating: parseInt(reviewData.rating),
                         text: reviewData.text,
-                        response: "",
-                        token: reviewData.token,
-                        orderId: reviewData.orderId
+                        service: reviewData.service,
+                        orderId: reviewData.orderId || ''
                     };
                     
-                    // Добавляем отзыв в список ожидающих
-                    pendingReviews.push(newReview);
+                    console.log('Отправка данных на сервер:', data);
                     
-                    // Сохраняем в localStorage
-                    localStorage.setItem('pendingReviews', JSON.stringify(pendingReviews));
+                    // Отправляем данные
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
                     
-                    console.log('Отзыв сохранен локально, ожидает синхронизации');
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.error || 'Неизвестная ошибка при сохранении отзыва');
+                    }
+                    
+                    console.log('Отзыв успешно сохранен:', result);
                     
                     // Скрываем индикатор загрузки и форму
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('review-form').style.display = 'none';
                     
-                    // Показываем сообщение об успехе с дополнительной информацией
-                    const successMessage = document.getElementById('success-message');
-                    successMessage.innerHTML = `
-                        <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
-                        <h3>Спасибо за ваш отзыв!</h3>
-                        <p>Ваш отзыв успешно сохранен и будет опубликован после проверки.</p>
-                    `;
-                    successMessage.style.display = 'block';
+                    // Показываем сообщение об успехе
+                    document.getElementById('success-message').style.display = 'block';
                     
                     return true;
                 } catch (error) {
@@ -573,7 +573,7 @@
                     // Показываем сообщение об ошибке
                     document.getElementById('error-container').style.display = 'block';
                     document.getElementById('error-message').textContent = 
-                        `Произошла ошибка при сохранении отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
+                        `Произошла ошибка при отправке отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
                     
                     return false;
                 }

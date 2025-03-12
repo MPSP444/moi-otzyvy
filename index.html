@@ -961,6 +961,25 @@
     </header>
 
     <div class="container">
+        <!-- Отзывы клиентов (показываем сразу) -->
+        <h2 style="text-align: center; margin-top: 20px; color: var(--primary-color);">Отзывы наших клиентов</h2>
+        <p style="text-align: center; margin-bottom: 30px;">Узнайте, что говорят о нас те, кто уже воспользовался нашими услугами</p>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-rating="all">Все отзывы</button>
+            <button class="filter-btn" data-rating="5">5 звезд</button>
+            <button class="filter-btn" data-rating="4">4 звезды</button>
+            <button class="filter-btn" data-rating="3">3 звезды</button>
+            <button class="filter-btn" data-rating="2">2 звезды</button>
+            <button class="filter-btn" data-rating="1">1 звезда</button>
+        </div>
+
+        <div class="spinner" id="spinner"></div>
+        
+        <div class="reviews-container" id="reviews-container">
+            <!-- Отзывы будут загружены из Firebase через JavaScript -->
+        </div>
+        
         <!-- Информация о компании -->
         <section class="hero">
             <div class="hero-overlay"></div>
@@ -968,7 +987,7 @@
                 <div class="hero-text">
                     <h2>ООО MPSP — ваш надежный помощник с 2017 года</h2>
                     <p>Мы помогаем студентам успешно преодолевать академические трудности и эффективно выполнять учебные задания. За время работы более <span class="highlight">1000 клиентов</span> доверили нам свое образование.</p>
-                    <p>Наша цель — помочь каждому студенту раскрыть свой потенциал, успешно сдать долги и получить качественное образование. Результаты довольных клиентов вы можете увидеть в отзывах ниже.</p>
+                    <p>Наша цель — помочь каждому студенту раскрыть свой потенциал, успешно сдать долги и получить качественное образование. Результаты довольных клиентов вы можете увидеть в отзывах выше.</p>
                     <p>Наша онлайн-платформа работает с марта 2025 года, предоставляя удобный и современный сервис для всех наших клиентов.</p>
                     <a href="#discounts" class="btn btn-primary">Узнать о скидках</a>
                     <a href="#contact" class="btn">Связаться с нами</a>
@@ -1168,24 +1187,7 @@
             </div>
         </section>
 
-        <!-- Отзывы клиентов -->
-        <h2 style="text-align: center; margin-top: 50px; color: var(--primary-color);">Отзывы клиентов</h2>
-        <p style="text-align: center; margin-bottom: 30px;">Узнайте, что говорят о нас те, кто уже воспользовался нашими услугами</p>
-        
-        <div class="filters">
-            <button class="filter-btn active" data-rating="all">Все отзывы</button>
-            <button class="filter-btn" data-rating="5">5 звезд</button>
-            <button class="filter-btn" data-rating="4">4 звезды</button>
-            <button class="filter-btn" data-rating="3">3 звезды</button>
-            <button class="filter-btn" data-rating="2">2 звезды</button>
-            <button class="filter-btn" data-rating="1">1 звезда</button>
-        </div>
-
-        <div class="spinner" id="spinner"></div>
-        
-        <div class="reviews-container" id="reviews-container">
-            <!-- Отзывы будут загружены из Firebase через JavaScript -->
-        </div>
+        <!-- Дополнительные отзывы здесь не нужны, так как мы уже добавили их в начало страницы -->
         
         <!-- Контактная информация -->
         <section class="contact" id="contact">

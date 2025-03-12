@@ -416,6 +416,10 @@
             
             // Обработка отправки формы
             const reviewForm = document.getElementById('review-form');
+            
+            // Вставьте этот фрагмент кода в секцию обработки отправки формы в submit-review.html
+            // Замените существующий обработчик события submit на этот:
+            
             reviewForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
                 
@@ -455,22 +459,35 @@
                         // Показываем индикатор загрузки
                         document.getElementById('loading').style.display = 'block';
                         
-                        console.log('Начало процесса отправки отзыва...');
+                        // Получаем данные для отзыва
+                        const service = document.getElementById('review-service').value || "Не указано";
+                        const token = document.getElementById('review-token').value;
+                        const orderId = document.getElementById('review-order-id').value || "Не указано";
                         
-                        // Создаем новый отзыв
+                        // Формируем сообщение для WhatsApp
+                        const whatsappMessage = encodeURIComponent(
+                            `Новый отзыв от: ${name}\n` +
+                            `Оценка: ${'★'.repeat(parseInt(rating.value))}\n` +
+                            `Услуга: ${service}\n` +
+                            `Заказ №: ${orderId}\n\n` +
+                            `Отзыв:\n${text}`
+                        );
+                        
+                        // Открываем WhatsApp с подготовленным сообщением
+                        window.open(`https://wa.me/79066322571?text=${whatsappMessage}`, '_blank');
+                        
+                        // Создаем новый отзыв для Firebase
                         const newReview = {
                             name: name,
-                            date: new Date().toISOString().split('T')[0], // формат YYYY-MM-DD
+                            date: new Date().toISOString().split('T')[0], 
                             rating: parseInt(rating.value),
-                            service: document.getElementById('review-service').value || "Не указано",
+                            service: service,
                             text: text,
-                            token: document.getElementById('review-token').value,
-                            orderId: document.getElementById('review-order-id').value || "Не указано",
+                            token: token,
+                            orderId: orderId,
                             response: "",
                             status: "pending" // для модерации, позже можно изменить на "approved"
                         };
-                        
-                        console.log('Создан новый отзыв:', newReview);
                         
                         // Получаем ссылку на место в базе данных
                         const reviewsRef = ref(database, 'reviews');
@@ -478,8 +495,6 @@
                         const newReviewRef = push(reviewsRef);
                         // Сохраняем данные
                         await set(newReviewRef, newReview);
-                        
-                        console.log('Отзыв успешно сохранен в Firebase');
                         
                         // Скрываем индикатор загрузки и форму
                         document.getElementById('loading').style.display = 'none';

@@ -13,6 +13,7 @@
             --primary-color: #2196F3;
             --primary-dark: #1976D2;
             --secondary-color: #4CAF50;
+            --error-color: #F44336;
             --background-color: #f8f9fa;
             --card-color: #ffffff;
             --text-color: #333333;
@@ -187,6 +188,58 @@
             color: var(--secondary-color);
             display: block;
             margin-bottom: 5px;
+        }
+
+        /* Добавляем стили для лайков/дизлайков */
+        .review-reactions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .reaction-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .reaction-button {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .reaction-button i {
+            margin-right: 5px;
+            font-size: 1.1rem;
+        }
+
+        .reaction-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .reaction-button.liked {
+            color: var(--primary-color);
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .reaction-button.disliked {
+            color: var(--error-color);
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+
+        .reaction-stats {
+            font-size: 0.85rem;
+            color: var(--text-light);
         }
 
         .filters {
@@ -496,7 +549,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getDatabase, ref, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        import { getDatabase, ref, get, set, update, onValue, child, push } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -524,12 +577,8 @@
                     // Получаем ссылку на узел reviews в базе данных
                     const reviewsRef = ref(database, 'reviews');
                     
-                    // Получаем все отзывы или только одобренные
-                    // const reviewsQuery = query(reviewsRef, orderByChild('status'), equalTo('approved')); // для модерации
-                    const reviewsQuery = reviewsRef; // получаем все отзывы
-                    
                     // Получаем данные
-                    const snapshot = await get(reviewsQuery);
+                    const snapshot = await get(reviewsRef);
                     
                     // Преобразуем в массив
                     const reviews = [];
@@ -538,7 +587,12 @@
                             // Получаем данные и ID
                             const reviewData = childSnapshot.val();
                             reviewData.id = childSnapshot.key;
-                            reviews.push(reviewData);
+                            
+                            // Добавляем только одобренные отзывы или если нет статуса модерации
+                            const status = reviewData.status || 'approved'; // По умолчанию считаем одобренными
+                            if (status === 'approved') {
+                                reviews.push(reviewData);
+                            }
                         });
                     }
                     
@@ -638,6 +692,10 @@
                         year: 'numeric'
                     });
                     
+                    // Получаем количество лайков/дизлайков
+                    const likes = review.likes || 0;
+                    const dislikes = review.dislikes || 0;
+                    
                     // Создаем HTML для карточки отзыва
                     const card = document.createElement('div');
                     card.className = 'review-card';
@@ -658,9 +716,137 @@
                                 ${review.response}
                             </div>
                         ` : ''}
+                        <div class="review-reactions">
+                            <div class="reaction-buttons">
+                                <button class="reaction-button like-button" data-review-id="${review.id}">
+                                    <i class="fas fa-thumbs-up"></i> ${likes}
+                                </button>
+                                <button class="reaction-button dislike-button" data-review-id="${review.id}">
+                                    <i class="fas fa-thumbs-down"></i> ${dislikes}
+                                </button>
+                            </div>
+                            <div class="reaction-stats">
+                                ${likes + dislikes} человек оценили этот отзыв
+                            </div>
+                        </div>
                     `;
                     
                     container.appendChild(card);
+                });
+                
+                // Добавляем обработчики для кнопок лайков/дизлайков
+                setupReactionButtons();
+            }
+            
+            // Настройка обработчиков кнопок лайков/дизлайков
+            function setupReactionButtons() {
+                // Получаем сохраненные реакции из локального хранилища
+                const savedReactions = JSON.parse(localStorage.getItem('reviewReactions') || '{}');
+                
+                // Функция для сохранения реакции
+                const saveReaction = (reviewId, reaction) => {
+                    savedReactions[reviewId] = reaction;
+                    localStorage.setItem('reviewReactions', JSON.stringify(savedReactions));
+                };
+                
+                // Функция для обновления UI кнопок
+                const updateButtonUI = (likeBtn, dislikeBtn, reaction) => {
+                    likeBtn.classList.remove('liked');
+                    dislikeBtn.classList.remove('disliked');
+                    
+                    if (reaction === 'like') {
+                        likeBtn.classList.add('liked');
+                    } else if (reaction === 'dislike') {
+                        dislikeBtn.classList.add('disliked');
+                    }
+                };
+                
+                // Функция для обновления счетчика в базе данных
+                const updateReactionCount = async (reviewId, type, increment) => {
+                    try {
+                        // Получаем текущее значение
+                        const reviewRef = ref(database, `reviews/${reviewId}`);
+                        const snapshot = await get(reviewRef);
+                        
+                        if (snapshot.exists()) {
+                            const reviewData = snapshot.val();
+                            const currentCount = reviewData[type] || 0;
+                            
+                            // Обновляем значение
+                            await update(reviewRef, {
+                                [type]: currentCount + increment
+                            });
+                            
+                            // Обновляем отображение
+                            const button = document.querySelector(`.${type}-button[data-review-id="${reviewId}"]`);
+                            if (button) {
+                                // Обновляем только текст, сохраняя иконку
+                                const icon = button.innerHTML.split('</i>')[0] + '</i> ';
+                                button.innerHTML = icon + (currentCount + increment);
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Ошибка при обновлении ${type}:`, error);
+                    }
+                };
+                
+                // Обработчик для кнопок лайков
+                document.querySelectorAll('.like-button').forEach(button => {
+                    const reviewId = button.getAttribute('data-review-id');
+                    const dislikeBtn = document.querySelector(`.dislike-button[data-review-id="${reviewId}"]`);
+                    
+                    // Применяем сохраненное состояние
+                    if (savedReactions[reviewId]) {
+                        updateButtonUI(button, dislikeBtn, savedReactions[reviewId]);
+                    }
+                    
+                    button.addEventListener('click', async () => {
+                        const currentReaction = savedReactions[reviewId];
+                        
+                        if (currentReaction === 'like') {
+                            // Отменяем лайк
+                            saveReaction(reviewId, null);
+                            updateButtonUI(button, dislikeBtn, null);
+                            await updateReactionCount(reviewId, 'likes', -1);
+                        } else {
+                            // Ставим лайк
+                            if (currentReaction === 'dislike') {
+                                // Если был дизлайк, снимаем его
+                                await updateReactionCount(reviewId, 'dislikes', -1);
+                            }
+                            
+                            saveReaction(reviewId, 'like');
+                            updateButtonUI(button, dislikeBtn, 'like');
+                            await updateReactionCount(reviewId, 'likes', 1);
+                        }
+                    });
+                });
+                
+                // Обработчик для кнопок дизлайков
+                document.querySelectorAll('.dislike-button').forEach(button => {
+                    const reviewId = button.getAttribute('data-review-id');
+                    const likeBtn = document.querySelector(`.like-button[data-review-id="${reviewId}"]`);
+                    
+                    button.addEventListener('click', async () => {
+                        const currentReaction = savedReactions[reviewId];
+                        
+                        if (currentReaction === 'dislike') {
+                            // Отменяем дизлайк
+                            saveReaction(reviewId, null);
+                            updateButtonUI(likeBtn, button, null);
+                            await updateReactionCount(reviewId, 'dislikes', -1);
+                        } else {
+                            // Ставим дизлайк
+                            if (currentReaction === 'like') {
+                                // Если был лайк, снимаем его
+                                await updateReactionCount(reviewId, 'likes', -1);
+                            }
+                            
+                            saveReaction(reviewId, 'dislike');
+                            updateButtonUI(likeBtn, button, 'dislike');
+                            await updateReactionCount(reviewId, 'dislikes', 1);
+                        }
+                    });
                 });
             }
 

@@ -462,7 +462,7 @@
         <div class="container">
             <h1>Отзывы наших клиентов</h1>
             <p>Узнайте, что говорят о нас клиенты и оставьте свой отзыв о нашей работе.</p>
-            <button class="btn btn-primary" id="open-review-form">Оставить отзыв</button>
+            <a href="submit-review.html" class="btn btn-primary" id="open-review-form">Оставить отзыв</a>
         </div>
     </header>
 
@@ -479,61 +479,7 @@
         <div class="spinner" id="spinner"></div>
         
         <div class="reviews-container" id="reviews-container">
-            <!-- Отзывы будут загружены из JSON файла через JavaScript -->
-        </div>
-    </div>
-
-    <!-- Модальное окно для добавления отзыва -->
-    <div id="review-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Оставить отзыв</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="review-form">
-                    <div class="form-group">
-                        <label for="review-name">Ваше имя</label>
-                        <input type="text" id="review-name" class="form-control" required>
-                        <div class="error-message" id="name-error">Пожалуйста, введите ваше имя</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="review-service">Какой услугой вы воспользовались?</label>
-                        <input type="text" id="review-service" class="form-control" required>
-                        <div class="error-message" id="service-error">Пожалуйста, укажите услугу</div>
-                    </div>
-                    <div class="form-group">
-                        <label>Оценка</label>
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="5" required>
-                            <label for="star5"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star4" name="rating" value="4">
-                            <label for="star4"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star3" name="rating" value="3">
-                            <label for="star3"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star2" name="rating" value="2">
-                            <label for="star2"><i class="fas fa-star"></i></label>
-                            <input type="radio" id="star1" name="rating" value="1">
-                            <label for="star1"><i class="fas fa-star"></i></label>
-                        </div>
-                        <div class="error-message" id="rating-error">Пожалуйста, поставьте оценку</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="review-text">Ваш отзыв</label>
-                        <textarea id="review-text" class="form-control" required></textarea>
-                        <div class="error-message" id="text-error">Пожалуйста, напишите свой отзыв</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="review-token">Код подтверждения (если есть)</label>
-                        <input type="text" id="review-token" class="form-control">
-                        <small>Код подтверждения предоставляется после завершения заказа.</small>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Отправить отзыв</button>
-                    <div class="success-message" id="success-message">
-                        Спасибо за ваш отзыв! Он будет опубликован после модерации.
-                    </div>
-                </form>
-            </div>
+            <!-- Отзывы будут загружены из Firebase через JavaScript -->
         </div>
     </div>
 
@@ -547,147 +493,179 @@
         </div>
     </footer>
 
-    <script>
-        // Загрузка отзывов из JSON файла
-        async function loadReviews() {
-            try {
-                // Показываем спиннер
-                document.getElementById('spinner').style.display = 'block';
-                
-                // Загружаем отзывы из JSON файла
-                const response = await fetch('reviews.json');
-                const data = await response.json();
-                
-                // Скрываем спиннер
-                document.getElementById('spinner').style.display = 'none';
-                
-                // Сортируем отзывы по дате (новые сверху)
-                const reviews = data.reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                // Отображаем отзывы
-                displayReviews(reviews);
-                
-                // Добавляем анимацию появления для карточек
-                setTimeout(() => {
-                    document.querySelectorAll('.review-card').forEach((card, index) => {
-                        setTimeout(() => {
-                            card.classList.add('visible');
-                        }, index * 100);
-                    });
-                }, 300);
-            } catch (error) {
-                console.error('Ошибка загрузки отзывов:', error);
-                document.getElementById('spinner').style.display = 'none';
-                document.getElementById('reviews-container').innerHTML = `
-                    <div class="no-reviews">
-                        <i class="fas fa-comment-slash"></i>
-                        <h3>Отзывы не найдены</h3>
-                        <p>В данный момент отзывы отсутствуют или произошла ошибка загрузки.</p>
-                        <button class="btn" onclick="loadReviews()">Повторить загрузку</button>
-                    </div>
-                `;
-            }
-        }
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getDatabase, ref, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB72C32cWWdEg3FaLS_rwq6YqqE_GxzDKA",
+            authDomain: "ordermanagerreviews.firebaseapp.com",
+            databaseURL: "https://ordermanagerreviews-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "ordermanagerreviews",
+            storageBucket: "ordermanagerreviews.firebasestorage.app",
+            messagingSenderId: "520056396964",
+            appId: "1:520056396964:web:2ab52a7b93e10e12fb9a31",
+            measurementId: "G-XCZ6146RM4"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
-        // Отображение отзывов
-        function displayReviews(reviews, filter = 'all') {
-            const container = document.getElementById('reviews-container');
-            container.innerHTML = '';
-            
-            // Фильтруем отзывы, если выбран фильтр
-            let filteredReviews = reviews;
-            if (filter !== 'all') {
-                filteredReviews = reviews.filter(review => review.rating === parseInt(filter));
-            }
-            
-            // Если отзывов нет
-            if (filteredReviews.length === 0) {
-                container.innerHTML = `
-                    <div class="no-reviews">
-                        <i class="fas fa-comment-slash"></i>
-                        <h3>Отзывы не найдены</h3>
-                        <p>В данный момент отзывы с выбранным фильтром отсутствуют.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Создаем карточку для каждого отзыва
-            filteredReviews.forEach(review => {
-                // Получаем инициалы для аватара
-                const initials = review.name
-                    .split(' ')
-                    .map(n => n[0])
-                    .join('')
-                    .toUpperCase();
-                
-                // Формируем звезды для отображения рейтинга
-                let stars = '';
-                for (let i = 1; i <= 5; i++) {
-                    if (i <= review.rating) {
-                        stars += '<i class="fas fa-star"></i>';
-                    } else {
-                        stars += '<i class="far fa-star"></i>';
-                    }
-                }
-                
-                // Форматируем дату
-                const date = new Date(review.date);
-                const formattedDate = date.toLocaleDateString('ru-RU', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
-                
-                // Создаем HTML для карточки отзыва
-                const card = document.createElement('div');
-                card.className = 'review-card';
-                card.innerHTML = `
-                    <div class="review-header">
-                        <div class="review-avatar">${initials}</div>
-                        <div class="review-info">
-                            <h3>${review.name}</h3>
-                            <div class="review-date">${formattedDate}</div>
-                            <div class="review-service">${review.service}</div>
-                        </div>
-                    </div>
-                    <div class="stars">${stars}</div>
-                    <div class="review-text">${review.text}</div>
-                    ${review.response ? `
-                        <div class="review-response">
-                            <strong>Ответ:</strong>
-                            ${review.response}
-                        </div>
-                    ` : ''}
-                `;
-                
-                container.appendChild(card);
-            });
-        }
-
-        // Инициализация после загрузки страницы
         document.addEventListener('DOMContentLoaded', function() {
-            // Загружаем отзывы
-            loadReviews();
-            
-            // Настраиваем модальное окно
-            const modal = document.getElementById('review-modal');
-            const openModalBtn = document.getElementById('open-review-form');
-            const closeBtn = document.querySelector('.close');
-            
-            openModalBtn.addEventListener('click', function() {
-                modal.style.display = 'block';
-            });
-            
-            closeBtn.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-            
-            window.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
+            // Загрузка отзывов из Firebase
+            async function loadReviews() {
+                try {
+                    // Показываем спиннер
+                    document.getElementById('spinner').style.display = 'block';
+                    
+                    // Получаем ссылку на узел reviews в базе данных
+                    const reviewsRef = ref(database, 'reviews');
+                    
+                    // Получаем все отзывы или только одобренные
+                    // const reviewsQuery = query(reviewsRef, orderByChild('status'), equalTo('approved')); // для модерации
+                    const reviewsQuery = reviewsRef; // получаем все отзывы
+                    
+                    // Получаем данные
+                    const snapshot = await get(reviewsQuery);
+                    
+                    // Преобразуем в массив
+                    const reviews = [];
+                    if (snapshot.exists()) {
+                        snapshot.forEach((childSnapshot) => {
+                            // Получаем данные и ID
+                            const reviewData = childSnapshot.val();
+                            reviewData.id = childSnapshot.key;
+                            reviews.push(reviewData);
+                        });
+                    }
+                    
+                    // Скрываем спиннер
+                    document.getElementById('spinner').style.display = 'none';
+                    
+                    // Если отзывов нет
+                    if (reviews.length === 0) {
+                        document.getElementById('reviews-container').innerHTML = `
+                            <div class="no-reviews">
+                                <i class="fas fa-comment-slash"></i>
+                                <h3>Отзывы не найдены</h3>
+                                <p>В данный момент отзывы отсутствуют. Будьте первым, кто оставит отзыв!</p>
+                            </div>
+                        `;
+                        return reviews;
+                    }
+                    
+                    // Сортируем отзывы по дате (новые сверху)
+                    reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    // Отображаем отзывы
+                    displayReviews(reviews);
+                    
+                    // Добавляем анимацию появления для карточек
+                    setTimeout(() => {
+                        document.querySelectorAll('.review-card').forEach((card, index) => {
+                            setTimeout(() => {
+                                card.classList.add('visible');
+                            }, index * 100);
+                        });
+                    }, 300);
+                    
+                    return reviews;
+                } catch (error) {
+                    console.error('Ошибка загрузки отзывов:', error);
+                    document.getElementById('spinner').style.display = 'none';
+                    document.getElementById('reviews-container').innerHTML = `
+                        <div class="no-reviews">
+                            <i class="fas fa-comment-slash"></i>
+                            <h3>Ошибка загрузки отзывов</h3>
+                            <p>Произошла ошибка при загрузке отзывов: ${error.message}</p>
+                            <button class="btn" onclick="loadReviews()">Повторить загрузку</button>
+                        </div>
+                    `;
+                    return null;
                 }
-            });
+            }
+
+            // Отображение отзывов
+            function displayReviews(reviews, filter = 'all') {
+                const container = document.getElementById('reviews-container');
+                container.innerHTML = '';
+                
+                // Фильтруем отзывы, если выбран фильтр
+                let filteredReviews = reviews;
+                if (filter !== 'all') {
+                    filteredReviews = reviews.filter(review => review.rating === parseInt(filter));
+                }
+                
+                // Если отзывов нет
+                if (filteredReviews.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-reviews">
+                            <i class="fas fa-comment-slash"></i>
+                            <h3>Отзывы не найдены</h3>
+                            <p>В данный момент отзывы с выбранным фильтром отсутствуют.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Создаем карточку для каждого отзыва
+                filteredReviews.forEach(review => {
+                    // Получаем инициалы для аватара
+                    const initials = review.name
+                        .split(' ')
+                        .map(n => n[0])
+                        .join('')
+                        .toUpperCase();
+                    
+                    // Формируем звезды для отображения рейтинга
+                    let stars = '';
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= review.rating) {
+                            stars += '<i class="fas fa-star"></i>';
+                        } else {
+                            stars += '<i class="far fa-star"></i>';
+                        }
+                    }
+                    
+                    // Форматируем дату
+                    const date = new Date(review.date);
+                    const formattedDate = date.toLocaleDateString('ru-RU', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    
+                    // Создаем HTML для карточки отзыва
+                    const card = document.createElement('div');
+                    card.className = 'review-card';
+                    card.innerHTML = `
+                        <div class="review-header">
+                            <div class="review-avatar">${initials}</div>
+                            <div class="review-info">
+                                <h3>${review.name}</h3>
+                                <div class="review-date">${formattedDate}</div>
+                                <div class="review-service">${review.service}</div>
+                            </div>
+                        </div>
+                        <div class="stars">${stars}</div>
+                        <div class="review-text">${review.text}</div>
+                        ${review.response ? `
+                            <div class="review-response">
+                                <strong>Ответ:</strong>
+                                ${review.response}
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            }
+
+            // Загружаем отзывы при загрузке страницы
+            loadReviews();
             
             // Настраиваем фильтры
             const filterButtons = document.querySelectorAll('.filter-btn');
@@ -700,10 +678,11 @@
                     
                     // Применяем фильтр
                     const rating = this.getAttribute('data-rating');
-                    fetch('reviews.json')
-                        .then(response => response.json())
-                        .then(data => {
-                            displayReviews(data.reviews, rating);
+                    
+                    // Загружаем отзывы заново и фильтруем
+                    loadReviews().then(reviews => {
+                        if (reviews) {
+                            displayReviews(reviews, rating);
                             // Анимация появления карточек
                             setTimeout(() => {
                                 document.querySelectorAll('.review-card').forEach((card, index) => {
@@ -712,68 +691,9 @@
                                     }, index * 100);
                                 });
                             }, 100);
-                        })
-                        .catch(error => console.error('Ошибка загрузки отзывов:', error));
+                        }
+                    });
                 });
-            });
-            
-            // Обработка формы отзыва
-            const reviewForm = document.getElementById('review-form');
-            reviewForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                // Проверка валидности формы
-                let isValid = true;
-                
-                // Проверка имени
-                const name = document.getElementById('review-name').value.trim();
-                if (!name) {
-                    document.getElementById('name-error').style.display = 'block';
-                    isValid = false;
-                } else {
-                    document.getElementById('name-error').style.display = 'none';
-                }
-                
-                // Проверка услуги
-                const service = document.getElementById('review-service').value.trim();
-                if (!service) {
-                    document.getElementById('service-error').style.display = 'block';
-                    isValid = false;
-                } else {
-                    document.getElementById('service-error').style.display = 'none';
-                }
-                
-                // Проверка рейтинга
-                const rating = document.querySelector('input[name="rating"]:checked');
-                if (!rating) {
-                    document.getElementById('rating-error').style.display = 'block';
-                    isValid = false;
-                } else {
-                    document.getElementById('rating-error').style.display = 'none';
-                }
-                
-                // Проверка текста отзыва
-                const text = document.getElementById('review-text').value.trim();
-                if (!text) {
-                    document.getElementById('text-error').style.display = 'block';
-                    isValid = false;
-                } else {
-                    document.getElementById('text-error').style.display = 'none';
-                }
-                
-                // Если форма валидна, отправляем отзыв
-                if (isValid) {
-                    // В реальном приложении здесь был бы код для отправки отзыва на сервер
-                    // Поскольку это демо, просто показываем сообщение об успехе
-                    document.getElementById('success-message').style.display = 'block';
-                    
-                    // Сбрасываем форму через 3 секунды
-                    setTimeout(() => {
-                        reviewForm.reset();
-                        document.getElementById('success-message').style.display = 'none';
-                        modal.style.display = 'none';
-                    }, 3000);
-                }
             });
             
             // Настраиваем кнопку прокрутки вверх

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отзывы клиентов</title>
+    <title>Отзывы клиентов | ООО MPSP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,6 +96,263 @@
             box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
         }
 
+        /* Hero section */
+        .hero {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(33, 150, 243, 0.05);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .hero-text h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .hero-text p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .hero-text .highlight {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--primary-dark);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        /* Benefits section */
+        .benefits {
+            margin: 50px 0;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .benefits h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .benefit-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        /* Team section */
+        .team {
+            margin: 50px 0;
+            animation: fadeIn 1.4s ease;
+        }
+
+        .team h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-image {
+            width: 100%;
+            height: 200px;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .team-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .team-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .team-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .team-social a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Discounts section */
+        .discounts {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: var(--shadow);
+            animation: fadeIn 1.6s ease;
+        }
+
+        .discounts h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .discounts p {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .discount-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .discount-table th, .discount-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        .discount-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .discount-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .discount-table tr:hover {
+            background-color: rgba(33, 150, 243, 0.05);
+        }
+
+        /* Reviews section */
         .reviews-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -190,7 +447,7 @@
             margin-bottom: 5px;
         }
 
-        /* Добавляем стили для лайков/дизлайков */
+        /* Reaction buttons */
         .review-reactions {
             display: flex;
             justify-content: space-between;
@@ -242,6 +499,7 @@
             color: var(--text-light);
         }
 
+        /* Filters */
         .filters {
             display: flex;
             flex-wrap: wrap;
@@ -266,6 +524,98 @@
             border-color: var(--primary-color);
         }
 
+        /* Contact section */
+        .contact {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: var(--shadow);
+            animation: fadeIn 1.8s ease;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            align-items: center;
+        }
+
+        .contact-info {
+            padding-right: 20px;
+        }
+
+        .contact-info p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .contact-info strong {
+            color: var(--primary-color);
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .contact-method i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .contact-method span {
+            font-size: 1.1rem;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -309,78 +659,7 @@
             cursor: pointer;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
-            outline: none;
-        }
-
-        .star-rating {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-        }
-
-        .star-rating input {
-            display: none;
-        }
-
-        .star-rating label {
-            cursor: pointer;
-            font-size: 30px;
-            color: #ddd;
-            margin-right: 5px;
-            transition: var(--transition);
-        }
-
-        .star-rating label:hover,
-        .star-rating label:hover ~ label,
-        .star-rating input:checked ~ label {
-            color: #FFD700;
-        }
-
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .error-message {
-            color: #f44336;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .success-message {
-            background-color: #e8f5e9;
-            color: var(--secondary-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            text-align: center;
-            display: none;
-        }
-
+        /* No reviews */
         .no-reviews {
             text-align: center;
             padding: 40px;
@@ -397,6 +676,7 @@
             display: block;
         }
 
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -435,34 +715,117 @@
             }
         }
 
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.2rem;
-            }
-            
-            header p {
-                font-size: 1rem;
-            }
-            
-            .reviews-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                margin: 20px;
-                max-width: calc(100% - 40px);
-            }
+        /* Stats counter */
+        .stats {
+            margin: 50px 0;
+            animation: fadeIn 1.2s ease;
         }
 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Footer */
         footer {
             background-color: white;
-            padding: 30px 0;
-            text-align: center;
-            margin-top: 60px;
-            border-top: 1px solid #e0e0e0;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+            border-top: 1px solid #eee;
         }
 
-        footer p {
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-column p {
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
             color: var(--text-light);
         }
 
@@ -508,6 +871,84 @@
         @keyframes spin {
             to {transform: rotate(360deg);}
         }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .hero-content {
+                flex-direction: column;
+            }
+            
+            .hero-text {
+                padding-right: 0;
+                margin-bottom: 30px;
+            }
+            
+            .reviews-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                max-width: calc(100% - 40px);
+            }
+            
+            .benefit-card, .stat-card {
+                padding: 20px;
+            }
+            
+            .discount-table {
+                font-size: 0.9rem;
+            }
+            
+            .discount-table th, .discount-table td {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .benefits-grid, .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 20px;
+            }
+            
+            .discounts, .contact {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -520,6 +961,217 @@
     </header>
 
     <div class="container">
+        <!-- Информация о компании -->
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2>ООО MPSP — ваш надежный помощник с 2017 года</h2>
+                    <p>Мы помогаем студентам успешно преодолевать академические трудности и эффективно выполнять учебные задания. За время работы более <span class="highlight">1000 клиентов</span> доверили нам свое образование.</p>
+                    <p>Наша цель — помочь каждому студенту раскрыть свой потенциал, успешно сдать долги и получить качественное образование. Результаты довольных клиентов вы можете увидеть в отзывах ниже.</p>
+                    <p>Наша онлайн-платформа работает с марта 2025 года, предоставляя удобный и современный сервис для всех наших клиентов.</p>
+                    <a href="#discounts" class="btn btn-primary">Узнать о скидках</a>
+                    <a href="#contact" class="btn">Связаться с нами</a>
+                </div>
+                <div class="hero-image">
+                    <img src="/api/placeholder/400/320" alt="ООО MPSP - студенческий помощник" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Статистика компании -->
+        <section class="stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="years-count">8+</div>
+                    <div class="stat-label">Лет на рынке</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="clients-count">1000+</div>
+                    <div class="stat-label">Довольных клиентов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="orders-count">5000+</div>
+                    <div class="stat-label">Выполненных заказов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="rating">4.8</div>
+                    <div class="stat-label">Средний рейтинг</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Преимущества компании -->
+        <section class="benefits">
+            <h2>Почему выбирают нас</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Качественное выполнение</h3>
+                    <p>Все наши работы выполняются квалифицированными специалистами с учетом всех требований вашего учебного заведения.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Соблюдение сроков</h3>
+                    <p>Мы ценим ваше время и всегда выполняем заказы в оговоренные сроки, даже при сжатых временных рамках.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Конфиденциальность</h3>
+                    <p>Гарантируем полную конфиденциальность вашей информации и защиту ваших данных на всех этапах работы.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3>Постоянная связь</h3>
+                    <p>Наши менеджеры остаются на связи 24/7, готовы ответить на все вопросы и предоставить необходимую информацию.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Опытные специалисты</h3>
+                    <p>Наша команда состоит из профессионалов с высшим образованием и богатым опытом в различных дисциплинах.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3>Гибкая система скидок</h3>
+                    <p>Постоянным клиентам предоставляются привлекательные скидки, которые растут с каждым новым заказом.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Система скидок -->
+        <section class="discounts" id="discounts">
+            <h2>Наша система скидок</h2>
+            <p>Мы ценим своих клиентов и предлагаем выгодные условия сотрудничества. Чем больше заказов вы делаете, тем больше экономите!</p>
+            
+            <table class="discount-table">
+                <thead>
+                    <tr>
+                        <th>Количество заказов</th>
+                        <th>Скидка</th>
+                        <th>Дополнительные преимущества</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1-2 заказа</td>
+                        <td>5%</td>
+                        <td>Приоритетная поддержка</td>
+                    </tr>
+                    <tr>
+                        <td>3-5 заказов</td>
+                        <td>10%</td>
+                        <td>Ускоренное выполнение</td>
+                    </tr>
+                    <tr>
+                        <td>6-10 заказов</td>
+                        <td>15%</td>
+                        <td>Бесплатные правки</td>
+                    </tr>
+                    <tr>
+                        <td>Более 10 заказов</td>
+                        <td>20%</td>
+                        <td>Персональный менеджер</td>
+                    </tr>
+                    <tr>
+                        <td>Групповой заказ (от 3 человек)</td>
+                        <td>25%</td>
+                        <td>Индивидуальные условия</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p style="text-align: center; margin-top: 30px;">
+                <a href="#contact" class="btn btn-primary">Получить консультацию</a>
+            </p>
+        </section>
+        
+        <!-- Наша команда -->
+        <section class="team">
+            <h2>Наша команда</h2>
+            <p style="text-align: center; margin-bottom: 30px;">Познакомьтесь с людьми, которые помогут вам в вашем учебном пути. Мы постоянно расширяем нашу команду талантливыми специалистами!</p>
+            
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="/api/placeholder/250/200" alt="Мукам Гурбанмурдов" />
+                    </div>
+                    <div class="team-info">
+                        <h3>Мукам Гурбанмурдов</h3>
+                        <p>Основатель и руководитель</p>
+                        <div class="team-social">
+                            <a href="https://vk.com/Gurbanmyradov99" target="_blank"><i class="fab fa-vk"></i></a>
+                            <a href="https://wa.me/79066322571" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            <a href="mailto:Mukam1@list.ru"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="/api/placeholder/250/200" alt="Анна Петрова" />
+                    </div>
+                    <div class="team-info">
+                        <h3>Анна Петрова</h3>
+                        <p>Руководитель отдела технических дисциплин</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-vk"></i></a>
+                            <a href="#"><i class="fab fa-telegram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="/api/placeholder/250/200" alt="Сергей Иванов" />
+                    </div>
+                    <div class="team-info">
+                        <h3>Сергей Иванов</h3>
+                        <p>Главный специалист по экономическим дисциплинам</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-vk"></i></a>
+                            <a href="#"><i class="fab fa-telegram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="/api/placeholder/250/200" alt="Ольга Смирнова" />
+                    </div>
+                    <div class="team-info">
+                        <h3>Ольга Смирнова</h3>
+                        <p>Специалист по гуманитарным наукам</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-vk"></i></a>
+                            <a href="#"><i class="fab fa-telegram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <h3>Присоединяйтесь к нашей команде!</h3>
+                <p>Мы активно набираем талантливых специалистов во всех областях знаний. Если вы профессионал своего дела и хотите помогать студентам, мы ждем вас!</p>
+                <a href="#contact" class="btn">Отправить резюме</a>
+            </div>
+        </section>
+
+        <!-- Отзывы клиентов -->
+        <h2 style="text-align: center; margin-top: 50px; color: var(--primary-color);">Отзывы клиентов</h2>
+        <p style="text-align: center; margin-bottom: 30px;">Узнайте, что говорят о нас те, кто уже воспользовался нашими услугами</p>
+        
         <div class="filters">
             <button class="filter-btn active" data-rating="all">Все отзывы</button>
             <button class="filter-btn" data-rating="5">5 звезд</button>
@@ -534,6 +1186,63 @@
         <div class="reviews-container" id="reviews-container">
             <!-- Отзывы будут загружены из Firebase через JavaScript -->
         </div>
+        
+        <!-- Контактная информация -->
+        <section class="contact" id="contact">
+            <h2>Свяжитесь с нами</h2>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>Есть вопросы или готовы сделать заказ? Свяжитесь с нами любым удобным способом!</p>
+                    
+                    <div class="contact-method">
+                        <i class="fas fa-phone"></i>
+                        <span><strong>Телефон:</strong> +7 906 632-25-71</span>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fab fa-whatsapp"></i>
+                        <span><strong>WhatsApp:</strong> +7 906 632-25-71</span>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fab fa-vk"></i>
+                        <span><strong>ВКонтакте:</strong> <a href="https://vk.com/Gurbanmyradov99" target="_blank">Gurbanmyradov99</a></span>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fas fa-envelope"></i>
+                        <span><strong>Email:</strong> Mukam1@list.ru</span>
+                    </div>
+                    
+                    <p style="margin-top: 30px;">Работаем ежедневно с 9:00 до 21:00 без выходных. Оперативно отвечаем на все обращения!</p>
+                </div>
+                
+                <div class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Ваше сообщение</label>
+                        <textarea id="message" class="form-control" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </div>
+            </div>
+        </section>
     </div>
 
     <div class="scroll-to-top" id="scroll-to-top">
@@ -542,363 +1251,51 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Система управления заказами. Все права защищены.</p>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>О компании</h3>
+                    <p>ООО MPSP работает с 2017 года, помогая студентам успешно справляться с учебными задачами и развиваться профессионально.</p>
+                    <div class="footer-social">
+                        <a href="https://vk.com/Gurbanmyradov99" target="_blank"><i class="fab fa-vk"></i></a>
+                        <a href="https://wa.me/79066322571" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="mailto:Mukam1@list.ru"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Услуги</h3>
+                    <ul>
+                        <li><a href="#">Выполнение контрольных работ</a></li>
+                        <li><a href="#">Написание курсовых работ</a></li>
+                        <li><a href="#">Помощь с дипломными работами</a></li>
+                        <li><a href="#">Решение задач</a></li>
+                        <li><a href="#">Подготовка к экзаменам</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Информация</h3>
+                    <ul>
+                        <li><a href="#">Как оформить заказ</a></li>
+                        <li><a href="#">Способы оплаты</a></li>
+                        <li><a href="#">Гарантии и конфиденциальность</a></li>
+                        <li><a href="#">Частые вопросы</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <p><strong>Телефон:</strong> +7 906 632-25-71</p>
+                    <p><strong>WhatsApp:</strong> +7 906 632-25-71</p>
+                    <p><strong>Email:</strong> Mukam1@list.ru</p>
+                    <p><strong>ВКонтакте:</strong> <a href="https://vk.com/Gurbanmyradov99" target="_blank">Gurbanmyradov99</a></p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2017-2025 ООО MPSP. Все права защищены.</p>
+                <p>ИП Гурбанмурдов Мукам Ровшенович</p>
+            </div>
         </div>
     </footer>
-
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getDatabase, ref, get, set, update, onValue, child, push } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
-        
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyB72C32cWWdEg3FaLS_rwq6YqqE_GxzDKA",
-            authDomain: "ordermanagerreviews.firebaseapp.com",
-            databaseURL: "https://ordermanagerreviews-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "ordermanagerreviews",
-            storageBucket: "ordermanagerreviews.firebasestorage.app",
-            messagingSenderId: "520056396964",
-            appId: "1:520056396964:web:2ab52a7b93e10e12fb9a31",
-            measurementId: "G-XCZ6146RM4"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Загрузка отзывов из Firebase
-            async function loadReviews() {
-                try {
-                    // Показываем спиннер
-                    document.getElementById('spinner').style.display = 'block';
-                    
-                    // Получаем ссылку на узел reviews в базе данных
-                    const reviewsRef = ref(database, 'reviews');
-                    
-                    // Получаем данные
-                    const snapshot = await get(reviewsRef);
-                    
-                    // Преобразуем в массив
-                    const reviews = [];
-                    if (snapshot.exists()) {
-                        snapshot.forEach((childSnapshot) => {
-                            // Получаем данные и ID
-                            const reviewData = childSnapshot.val();
-                            reviewData.id = childSnapshot.key;
-                            
-                            // Добавляем только одобренные отзывы или если нет статуса модерации
-                            const status = reviewData.status || 'approved'; // По умолчанию считаем одобренными
-                            if (status === 'approved') {
-                                reviews.push(reviewData);
-                            }
-                        });
-                    }
-                    
-                    // Скрываем спиннер
-                    document.getElementById('spinner').style.display = 'none';
-                    
-                    // Если отзывов нет
-                    if (reviews.length === 0) {
-                        document.getElementById('reviews-container').innerHTML = `
-                            <div class="no-reviews">
-                                <i class="fas fa-comment-slash"></i>
-                                <h3>Отзывы не найдены</h3>
-                                <p>В данный момент отзывы отсутствуют. Будьте первым, кто оставит отзыв!</p>
-                            </div>
-                        `;
-                        return reviews;
-                    }
-                    
-                    // Сортируем отзывы по дате (новые сверху)
-                    reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    
-                    // Отображаем отзывы
-                    displayReviews(reviews);
-                    
-                    // Добавляем анимацию появления для карточек
-                    setTimeout(() => {
-                        document.querySelectorAll('.review-card').forEach((card, index) => {
-                            setTimeout(() => {
-                                card.classList.add('visible');
-                            }, index * 100);
-                        });
-                    }, 300);
-                    
-                    return reviews;
-                } catch (error) {
-                    console.error('Ошибка загрузки отзывов:', error);
-                    document.getElementById('spinner').style.display = 'none';
-                    document.getElementById('reviews-container').innerHTML = `
-                        <div class="no-reviews">
-                            <i class="fas fa-comment-slash"></i>
-                            <h3>Ошибка загрузки отзывов</h3>
-                            <p>Произошла ошибка при загрузке отзывов: ${error.message}</p>
-                            <button class="btn" onclick="loadReviews()">Повторить загрузку</button>
-                        </div>
-                    `;
-                    return null;
-                }
-            }
-
-            // Отображение отзывов
-            function displayReviews(reviews, filter = 'all') {
-                const container = document.getElementById('reviews-container');
-                container.innerHTML = '';
-                
-                // Фильтруем отзывы, если выбран фильтр
-                let filteredReviews = reviews;
-                if (filter !== 'all') {
-                    filteredReviews = reviews.filter(review => review.rating === parseInt(filter));
-                }
-                
-                // Если отзывов нет
-                if (filteredReviews.length === 0) {
-                    container.innerHTML = `
-                        <div class="no-reviews">
-                            <i class="fas fa-comment-slash"></i>
-                            <h3>Отзывы не найдены</h3>
-                            <p>В данный момент отзывы с выбранным фильтром отсутствуют.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Создаем карточку для каждого отзыва
-                filteredReviews.forEach(review => {
-                    // Получаем инициалы для аватара
-                    const initials = review.name
-                        .split(' ')
-                        .map(n => n[0])
-                        .join('')
-                        .toUpperCase();
-                    
-                    // Формируем звезды для отображения рейтинга
-                    let stars = '';
-                    for (let i = 1; i <= 5; i++) {
-                        if (i <= review.rating) {
-                            stars += '<i class="fas fa-star"></i>';
-                        } else {
-                            stars += '<i class="far fa-star"></i>';
-                        }
-                    }
-                    
-                    // Форматируем дату
-                    const date = new Date(review.date);
-                    const formattedDate = date.toLocaleDateString('ru-RU', {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                    
-                    // Получаем количество лайков/дизлайков
-                    const likes = review.likes || 0;
-                    const dislikes = review.dislikes || 0;
-                    
-                    // Создаем HTML для карточки отзыва
-                    const card = document.createElement('div');
-                    card.className = 'review-card';
-                    card.innerHTML = `
-                        <div class="review-header">
-                            <div class="review-avatar">${initials}</div>
-                            <div class="review-info">
-                                <h3>${review.name}</h3>
-                                <div class="review-date">${formattedDate}</div>
-                                <div class="review-service">${review.service}</div>
-                            </div>
-                        </div>
-                        <div class="stars">${stars}</div>
-                        <div class="review-text">${review.text}</div>
-                        ${review.response ? `
-                            <div class="review-response">
-                                <strong>Ответ:</strong>
-                                ${review.response}
-                            </div>
-                        ` : ''}
-                        <div class="review-reactions">
-                            <div class="reaction-buttons">
-                                <button class="reaction-button like-button" data-review-id="${review.id}">
-                                    <i class="fas fa-thumbs-up"></i> ${likes}
-                                </button>
-                                <button class="reaction-button dislike-button" data-review-id="${review.id}">
-                                    <i class="fas fa-thumbs-down"></i> ${dislikes}
-                                </button>
-                            </div>
-                            <div class="reaction-stats">
-                                ${likes + dislikes} человек оценили этот отзыв
-                            </div>
-                        </div>
-                    `;
-                    
-                    container.appendChild(card);
-                });
-                
-                // Добавляем обработчики для кнопок лайков/дизлайков
-                setupReactionButtons();
-            }
-            
-            // Настройка обработчиков кнопок лайков/дизлайков
-            function setupReactionButtons() {
-                // Получаем сохраненные реакции из локального хранилища
-                const savedReactions = JSON.parse(localStorage.getItem('reviewReactions') || '{}');
-                
-                // Функция для сохранения реакции
-                const saveReaction = (reviewId, reaction) => {
-                    savedReactions[reviewId] = reaction;
-                    localStorage.setItem('reviewReactions', JSON.stringify(savedReactions));
-                };
-                
-                // Функция для обновления UI кнопок
-                const updateButtonUI = (likeBtn, dislikeBtn, reaction) => {
-                    likeBtn.classList.remove('liked');
-                    dislikeBtn.classList.remove('disliked');
-                    
-                    if (reaction === 'like') {
-                        likeBtn.classList.add('liked');
-                    } else if (reaction === 'dislike') {
-                        dislikeBtn.classList.add('disliked');
-                    }
-                };
-                
-                // Функция для обновления счетчика в базе данных
-                const updateReactionCount = async (reviewId, type, increment) => {
-                    try {
-                        // Получаем текущее значение
-                        const reviewRef = ref(database, `reviews/${reviewId}`);
-                        const snapshot = await get(reviewRef);
-                        
-                        if (snapshot.exists()) {
-                            const reviewData = snapshot.val();
-                            const currentCount = reviewData[type] || 0;
-                            
-                            // Обновляем значение
-                            await update(reviewRef, {
-                                [type]: currentCount + increment
-                            });
-                            
-                            // Обновляем отображение
-                            const button = document.querySelector(`.${type}-button[data-review-id="${reviewId}"]`);
-                            if (button) {
-                                // Обновляем только текст, сохраняя иконку
-                                const icon = button.innerHTML.split('</i>')[0] + '</i> ';
-                                button.innerHTML = icon + (currentCount + increment);
-                            }
-                        }
-                    } catch (error) {
-                        console.error(`Ошибка при обновлении ${type}:`, error);
-                    }
-                };
-                
-                // Обработчик для кнопок лайков
-                document.querySelectorAll('.like-button').forEach(button => {
-                    const reviewId = button.getAttribute('data-review-id');
-                    const dislikeBtn = document.querySelector(`.dislike-button[data-review-id="${reviewId}"]`);
-                    
-                    // Применяем сохраненное состояние
-                    if (savedReactions[reviewId]) {
-                        updateButtonUI(button, dislikeBtn, savedReactions[reviewId]);
-                    }
-                    
-                    button.addEventListener('click', async () => {
-                        const currentReaction = savedReactions[reviewId];
-                        
-                        if (currentReaction === 'like') {
-                            // Отменяем лайк
-                            saveReaction(reviewId, null);
-                            updateButtonUI(button, dislikeBtn, null);
-                            await updateReactionCount(reviewId, 'likes', -1);
-                        } else {
-                            // Ставим лайк
-                            if (currentReaction === 'dislike') {
-                                // Если был дизлайк, снимаем его
-                                await updateReactionCount(reviewId, 'dislikes', -1);
-                            }
-                            
-                            saveReaction(reviewId, 'like');
-                            updateButtonUI(button, dislikeBtn, 'like');
-                            await updateReactionCount(reviewId, 'likes', 1);
-                        }
-                    });
-                });
-                
-                // Обработчик для кнопок дизлайков
-                document.querySelectorAll('.dislike-button').forEach(button => {
-                    const reviewId = button.getAttribute('data-review-id');
-                    const likeBtn = document.querySelector(`.like-button[data-review-id="${reviewId}"]`);
-                    
-                    button.addEventListener('click', async () => {
-                        const currentReaction = savedReactions[reviewId];
-                        
-                        if (currentReaction === 'dislike') {
-                            // Отменяем дизлайк
-                            saveReaction(reviewId, null);
-                            updateButtonUI(likeBtn, button, null);
-                            await updateReactionCount(reviewId, 'dislikes', -1);
-                        } else {
-                            // Ставим дизлайк
-                            if (currentReaction === 'like') {
-                                // Если был лайк, снимаем его
-                                await updateReactionCount(reviewId, 'likes', -1);
-                            }
-                            
-                            saveReaction(reviewId, 'dislike');
-                            updateButtonUI(likeBtn, button, 'dislike');
-                            await updateReactionCount(reviewId, 'dislikes', 1);
-                        }
-                    });
-                });
-            }
-
-            // Загружаем отзывы при загрузке страницы
-            loadReviews();
-            
-            // Настраиваем фильтры
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Удаляем активный класс у всех кнопок
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    // Добавляем активный класс нажатой кнопке
-                    this.classList.add('active');
-                    
-                    // Применяем фильтр
-                    const rating = this.getAttribute('data-rating');
-                    
-                    // Загружаем отзывы заново и фильтруем
-                    loadReviews().then(reviews => {
-                        if (reviews) {
-                            displayReviews(reviews, rating);
-                            // Анимация появления карточек
-                            setTimeout(() => {
-                                document.querySelectorAll('.review-card').forEach((card, index) => {
-                                    setTimeout(() => {
-                                        card.classList.add('visible');
-                                    }, index * 100);
-                                });
-                            }, 100);
-                        }
-                    });
-                });
-            });
-            
-            // Настраиваем кнопку прокрутки вверх
-            const scrollBtn = document.getElementById('scroll-to-top');
-            window.addEventListener('scroll', function() {
-                if (window.pageYOffset > 300) {
-                    scrollBtn.classList.add('visible');
-                } else {
-                    scrollBtn.classList.remove('visible');
-                }
-            });
-            
-            scrollBtn.addEventListener('click', function() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
-</body>
-</html>

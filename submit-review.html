@@ -348,7 +348,27 @@
         </footer>
     </div>
 
-    <script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB72C32cWWdEg3FaLS_rwq6YqqE_GxzDKA",
+            authDomain: "ordermanagerreviews.firebaseapp.com",
+            databaseURL: "https://ordermanagerreviews-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "ordermanagerreviews",
+            storageBucket: "ordermanagerreviews.firebasestorage.app",
+            messagingSenderId: "520056396964",
+            appId: "1:520056396964:web:2ab52a7b93e10e12fb9a31",
+            measurementId: "G-XCZ6146RM4"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
         document.addEventListener('DOMContentLoaded', function() {
             // Получаем параметры из URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -363,7 +383,7 @@
             
             console.log("Получены параметры URL:", { token, orderId, service, clientName });
             
-            // Если есть информация о заказе, заполняем поля
+            // Заполняем информацию о заказе
             if (service) {
                 document.getElementById('review-service').value = service;
                 document.querySelector('#order-service span').textContent = service;
@@ -393,191 +413,6 @@
                 year: 'numeric'
             });
             document.querySelector('#order-date span').textContent = formattedDate;
-            
-            // Генерация нового ID
-            function getNewId(reviews) {
-                if (!reviews || reviews.length === 0) return "1";
-                const ids = reviews.map(r => parseInt(r.id)).filter(id => !isNaN(id));
-                return ids.length > 0 ? (Math.max(...ids) + 1).toString() : "1";
-            }
-            
-            
-            
-            async function getReviews() {
-                try {
-                    // Проверяем правильный URL репозитория
-                    console.log('Получение данных репозитория...');
-                    const repoInfoResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy');
-                    
-                    if (!repoInfoResponse.ok) {
-                        console.error(`Ошибка доступа к репозиторию: ${repoInfoResponse.status}`);
-                        console.error(await repoInfoResponse.text());
-                        
-                        // Пробуем получить локальную копию как запасной вариант
-                        const localResponse = await fetch('reviews.json');
-                        if (localResponse.ok) {
-                            console.log('Использую локальную копию файла отзывов');
-                            const data = await localResponse.json();
-                            return data;
-                        } else {
-                            throw new Error(`Не удалось получить ни удаленный, ни локальный файл отзывов`);
-                        }
-                    }
-                    
-                    // Получаем список файлов в корне репозитория для проверки
-                    console.log('Получение списка файлов...');
-                    const contentsResponse = await fetch('https://api.github.com/repos/MPSP444/moi-otzyvy/contents/');
-                    
-                    if (!contentsResponse.ok) {
-                        throw new Error(`Ошибка получения содержимого репозитория: ${contentsResponse.status}`);
-                    }
-                    
-                    const contents = await contentsResponse.json();
-                    console.log('Файлы в репозитории:', contents.map(file => file.name));
-                    
-                    // Ищем файл reviews.json
-                    const reviewsFile = contents.find(file => file.name === 'reviews.json');
-                    
-                    if (!reviewsFile) {
-                        throw new Error('Файл reviews.json не найден в репозитории');
-                    }
-                    
-                    // Получаем содержимое файла
-                    console.log('Получение файла reviews.json...');
-                    const fileInfoResponse = await fetch(reviewsFile.url);
-                    
-                    if (!fileInfoResponse.ok) {
-                        throw new Error(`Ошибка получения информации о файле: ${fileInfoResponse.status}`);
-                    }
-                    
-                    const fileInfo = await fileInfoResponse.json();
-                    
-                    // Декодируем содержимое файла из base64
-                    const content = atob(fileInfo.content);
-                    const reviewsData = JSON.parse(content);
-                    
-                    // Сохраняем SHA и URL для последующего обновления
-                    reviewsData._sha = fileInfo.sha;
-                    reviewsData._url = fileInfo.url;
-                    
-                    return reviewsData;
-                } catch (error) {
-                    console.error('Ошибка получения отзывов:', error);
-                    throw error;
-                }
-            }
-            
-            async function updateReviewsOnGitHub(reviewsData, newReview) {
-                try {
-                    console.log('Начало обновления файла reviews.json...');
-                    
-                    // Проверяем, есть ли SHA файла
-                    if (!reviewsData._sha) {
-                        throw new Error('Отсутствует SHA файла, необходимый для обновления');
-                    }
-                    
-                    // URL для обновления файла
-                    const updateUrl = reviewsData._url || 'https://api.github.com/repos/MPSP444/moi-otzyvy/contents/reviews.json';
-                    console.log(`Используется URL для обновления: ${updateUrl}`);
-                    
-                    // Добавляем новый отзыв к существующим
-                    const updatedReviews = { reviews: [...reviewsData.reviews, newReview] };
-                    
-                    // Кодируем обновленные данные в base64
-                    const jsonContent = JSON.stringify(updatedReviews, null, 2);
-                    const encoded = btoa(unescape(encodeURIComponent(jsonContent)));
-                    
-                    console.log('Отправка обновленного файла на GitHub...');
-                    
-                    // Отправляем запрос на обновление файла
-                    const updateResponse = await fetch(updateUrl, {
-                        method: 'PUT',
-                        headers: {
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Content-Type': 'application/json',
-                            'Authorization': 'token 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'
-                        },
-                        body: JSON.stringify({
-                            message: `Добавлен новый отзыв от ${newReview.name}`,
-                            content: encoded,
-                            sha: reviewsData._sha
-                        })
-                    });
-                    
-                    if (!updateResponse.ok) {
-                        const errorData = await updateResponse.text();
-                        throw new Error(`Ошибка обновления файла: ${updateResponse.status} - ${errorData}`);
-                    }
-                    
-                    console.log('Файл reviews.json успешно обновлен на GitHub!');
-                    return true;
-                } catch (error) {
-                    console.error('Ошибка при обновлении отзывов на GitHub:', error);
-                    throw error;
-                }
-            }
-            
-            // Функция для сохранения отзыва
-            async function submitReview(reviewData) {
-                try {
-                    // Показываем индикатор загрузки
-                    document.getElementById('loading').style.display = 'block';
-                    
-                    console.log('Начало процесса отправки отзыва...');
-                    
-                    // URL вашего Google Apps Script веб-приложения
-                    const apiUrl = 'https://script.google.com/macros/s/AKfycbwboQEXgWaFAIr9MgXUk6ool_qPTUcgjpLYYuIpRODnZne0GIB_hKrNT4JPg3G33J_zng/exec';
-                    
-                    // Подготавливаем данные для отправки
-                    const data = {
-                        name: reviewData.name,
-                        rating: parseInt(reviewData.rating),
-                        text: reviewData.text,
-                        service: reviewData.service,
-                        orderId: reviewData.orderId || ''
-                    };
-                    
-                    console.log('Отправка данных на сервер:', data);
-                    
-                    // Отправляем данные
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        body: JSON.stringify(data),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (!result.success) {
-                        throw new Error(result.error || 'Неизвестная ошибка при сохранении отзыва');
-                    }
-                    
-                    console.log('Отзыв успешно сохранен:', result);
-                    
-                    // Скрываем индикатор загрузки и форму
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('review-form').style.display = 'none';
-                    
-                    // Показываем сообщение об успехе
-                    document.getElementById('success-message').style.display = 'block';
-                    
-                    return true;
-                } catch (error) {
-                    console.error('Ошибка при отправке отзыва:', error);
-                    
-                    // Скрываем индикатор загрузки
-                    document.getElementById('loading').style.display = 'none';
-                    
-                    // Показываем сообщение об ошибке
-                    document.getElementById('error-container').style.display = 'block';
-                    document.getElementById('error-message').textContent = 
-                        `Произошла ошибка при отправке отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
-                    
-                    return false;
-                }
-            }
             
             // Обработка отправки формы
             const reviewForm = document.getElementById('review-form');
@@ -616,24 +451,53 @@
                 
                 // Если форма валидна, отправляем отзыв
                 if (isValid) {
-                    // Собираем данные отзыва
-                    const reviewData = {
-                        name: name,
-                        rating: parseInt(rating.value),
-                        text: text,
-                        service: document.getElementById('review-service').value || "Не указано",
-                        token: document.getElementById('review-token').value,
-                        orderId: document.getElementById('review-order-id').value || orderId,
-                        date: new Date().toISOString().split('T')[0]
-                    };
-                    
-                    console.log('Отправка отзыва:', reviewData);
-                    
-                    // Отправляем отзыв
                     try {
-                        await submitReview(reviewData);
+                        // Показываем индикатор загрузки
+                        document.getElementById('loading').style.display = 'block';
+                        
+                        console.log('Начало процесса отправки отзыва...');
+                        
+                        // Создаем новый отзыв
+                        const newReview = {
+                            name: name,
+                            date: new Date().toISOString().split('T')[0], // формат YYYY-MM-DD
+                            rating: parseInt(rating.value),
+                            service: document.getElementById('review-service').value || "Не указано",
+                            text: text,
+                            token: document.getElementById('review-token').value,
+                            orderId: document.getElementById('review-order-id').value || "Не указано",
+                            response: "",
+                            status: "pending" // для модерации, позже можно изменить на "approved"
+                        };
+                        
+                        console.log('Создан новый отзыв:', newReview);
+                        
+                        // Получаем ссылку на место в базе данных
+                        const reviewsRef = ref(database, 'reviews');
+                        // Создаем новую запись с автогенерируемым ID
+                        const newReviewRef = push(reviewsRef);
+                        // Сохраняем данные
+                        await set(newReviewRef, newReview);
+                        
+                        console.log('Отзыв успешно сохранен в Firebase');
+                        
+                        // Скрываем индикатор загрузки и форму
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('review-form').style.display = 'none';
+                        
+                        // Показываем сообщение об успехе
+                        document.getElementById('success-message').style.display = 'block';
+                        
                     } catch (error) {
                         console.error('Ошибка при отправке отзыва:', error);
+                        
+                        // Скрываем индикатор загрузки
+                        document.getElementById('loading').style.display = 'none';
+                        
+                        // Показываем сообщение об ошибке
+                        document.getElementById('error-container').style.display = 'block';
+                        document.getElementById('error-message').textContent = 
+                            `Произошла ошибка при отправке отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
                     }
                 }
             });
@@ -641,7 +505,6 @@
             // Обработчик кнопки "Попробовать снова"
             document.getElementById('retry-btn').addEventListener('click', function() {
                 document.getElementById('error-container').style.display = 'none';
-                document.getElementById('review-form').style.display = 'block';
             });
         });
     </script>

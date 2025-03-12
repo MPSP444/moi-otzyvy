@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оставить отзыв</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary-color: #4CAF50;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            animation: fadeInDown 1s ease;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            font-size: 30px;
+            color: #ddd;
+            margin-right: 5px;
+            transition: var(--transition);
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #FFD700;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #e8f5e9;
+            color: var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
+            display: none;
+        }
+
+        .error-container {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(198, 40, 40, 0.1);
+            display: none;
+        }
+
+        .order-info {
+            background-color: rgba(33, 150, 243, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .order-info h3 {
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .order-info p {
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 20px auto;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Оставьте ваш отзыв</h1>
+            <p>Расскажите о вашем опыте работы с нами. Ваше мнение очень важно для нас!</p>
+        </header>
+
+        <div id="order-info" class="order-info">
+            <h3>Информация о вашем заказе</h3>
+            <p id="order-service">Услуга: <span>Загрузка...</span></p>
+            <p id="order-id">Заказ №: <span>Загрузка...</span></p>
+            <p id="order-date">Дата выполнения: <span>Загрузка...</span></p>
+        </div>
+
+        <div class="form-container">
+            <form id="review-form">
+                <div class="form-group">
+                    <label for="review-name">Ваше имя</label>
+                    <input type="text" id="review-name" class="form-control" required>
+                    <div class="error-message" id="name-error">Пожалуйста, введите ваше имя</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Оценка</label>
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5" required>
+                        <label for="star5"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1"><i class="fas fa-star"></i></label>
+                    </div>
+                    <div class="error-message" id="rating-error">Пожалуйста, поставьте оценку</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="review-text">Ваш отзыв</label>
+                    <textarea id="review-text" class="form-control" required></textarea>
+                    <div class="error-message" id="text-error">Пожалуйста, напишите свой отзыв</div>
+                </div>
+                
+                <input type="hidden" id="review-token" value="">
+                <input type="hidden" id="review-service" value="">
+                <input type="hidden" id="review-order-id" value="">
+                
+                <button type="submit" class="btn">Отправить отзыв</button>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Отправка отзыва...</p>
+                </div>
+            </form>
+            
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+                <h3>Спасибо за ваш отзыв!</h3>
+                <p>Ваш отзыв успешно отправлен. Он будет опубликован после модерации.</p>
+                <a href="index.html" class="btn" style="margin-top: 20px;">Посмотреть все отзывы</a>
+            </div>
+            
+            <div class="error-container" id="error-container">
+                <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #c62828; margin-bottom: 15px;"></i>
+                <h3>Ошибка</h3>
+                <p id="error-message">Произошла ошибка при отправке отзыва. Пожалуйста, попробуйте еще раз позже.</p>
+                <button class="btn" id="retry-btn" style="margin-top: 20px; background-color: #c62828;">Попробовать снова</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Система управления заказами. Все права защищены.</p>
+            <p><a href="index.html">Вернуться на главную</a></p>
+        </footer>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getDatabase, ref, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB72C32cWWdEg3FaLS_rwq6YqqE_GxzDKA",
+            authDomain: "ordermanagerreviews.firebaseapp.com",
+            databaseURL: "https://ordermanagerreviews-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "ordermanagerreviews",
+            storageBucket: "ordermanagerreviews.firebasestorage.app",
+            messagingSenderId: "520056396964",
+            appId: "1:520056396964:web:2ab52a7b93e10e12fb9a31",
+            measurementId: "G-XCZ6146RM4"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM загружен, начинаем работу с формой отзыва");
+            
+            // Получаем параметры из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token') || '';
+            const orderId = urlParams.get('order') || '';
+            const serviceEncoded = urlParams.get('service') || '';
+            const nameEncoded = urlParams.get('name') || '';
+            
+            // Декодируем параметры
+            const service = serviceEncoded ? decodeURIComponent(serviceEncoded) : '';
+            const clientName = nameEncoded ? decodeURIComponent(nameEncoded) : '';
+            
+            console.log("Получены параметры URL:", { token, orderId, service, clientName });
+            
+            // Заполняем информацию о заказе
+            if (service) {
+                document.getElementById('review-service').value = service;
+                document.querySelector('#order-service span').textContent = service;
+            } else {
+                document.getElementById('order-info').style.display = 'none';
+            }
+            
+            // Заполняем номер заказа
+            if (orderId) {
+                document.getElementById('review-order-id').value = orderId;
+                document.querySelector('#order-id span').textContent = orderId;
+            }
+            
+            // Заполняем имя клиента, если оно передано в URL
+            if (clientName) {
+                document.getElementById('review-name').value = clientName;
+            }
+            
+            // Устанавливаем токен в скрытое поле
+            document.getElementById('review-token').value = token;
+            
+            // Текущая дата для даты выполнения заказа
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.querySelector('#order-date span').textContent = formattedDate;
+            
+            // Обработка отправки формы
+            const reviewForm = document.getElementById('review-form');
+            if (reviewForm) {
+                console.log("Форма отзыва найдена, добавляем обработчик отправки");
+                
+                reviewForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    console.log("Начинаем отправку формы отзыва");
+                    
+                    // Валидация формы
+                    let isValid = true;
+                    
+                    // Проверка имени
+                    const name = document.getElementById('review-name').value.trim();
+                    if (!name) {
+                        document.getElementById('name-error').style.display = 'block';
+                        isValid = false;
+                    } else {
+                        document.getElementById('name-error').style.display = 'none';
+                    }
+                    
+                    // Проверка рейтинга
+                    const rating = document.querySelector('input[name="rating"]:checked');
+                    if (!rating) {
+                        document.getElementById('rating-error').style.display = 'block';
+                        isValid = false;
+                    } else {
+                        document.getElementById('rating-error').style.display = 'none';
+                    }
+                    
+                    // Проверка текста отзыва
+                    const text = document.getElementById('review-text').value.trim();
+                    if (!text) {
+                        document.getElementById('text-error').style.display = 'block';
+                        isValid = false;
+                    } else {
+                        document.getElementById('text-error').style.display = 'none';
+                    }
+                    
+                    // Если форма валидна, отправляем отзыв
+                    if (isValid) {
+                        try {
+                            // Показываем индикатор загрузки
+                            document.getElementById('loading').style.display = 'block';
+                            
+                            console.log('Начало процесса отправки отзыва...');
+                            
+                            // Создаем новый отзыв
+                            const newReview = {
+                                name: name,
+                                date: new Date().toISOString().split('T')[0], // формат YYYY-MM-DD
+                                rating: parseInt(rating.value),
+                                service: document.getElementById('review-service').value || "Не указано",
+                                text: text,
+                                token: document.getElementById('review-token').value,
+                                orderId: document.getElementById('review-order-id').value || "Не указано",
+                                response: "",
+                                status: "approved", // автоматически одобряем отзывы
+                                likes: 0,
+                                dislikes: 0,
+                                timestamp: serverTimestamp() // добавляем серверную метку времени
+                            };
+                            
+                            console.log('Создан новый отзыв:', newReview);
+                            
+                            // Получаем ссылку на место в базе данных
+                            const reviewsRef = ref(database, 'reviews');
+                            // Создаем новую запись с автогенерируемым ID
+                            const newReviewRef = push(reviewsRef);
+                            // Сохраняем данные
+                            await set(newReviewRef, newReview);
+                            
+                            console.log('Отзыв успешно сохранен в Firebase');
+                            
+                            // Скрываем индикатор загрузки и форму
+                            document.getElementById('loading').style.display = 'none';
+                            document.getElementById('review-form').style.display = 'none';
+                            
+                            // Показываем сообщение об успехе
+                            document.getElementById('success-message').style.display = 'block';
+                            
+                        } catch (error) {
+                            console.error('Ошибка при отправке отзыва:', error);
+                            
+                            // Скрываем индикатор загрузки
+                            document.getElementById('loading').style.display = 'none';
+                            
+                            // Показываем сообщение об ошибке
+                            document.getElementById('error-container').style.display = 'block';
+                            document.getElementById('error-message').textContent = 
+                                `Произошла ошибка при отправке отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
+                        }
+                    }
+                });
+            } else {
+                console.error("Форма отзыва не найдена!");
+            }
+            
+            // Обработчик кнопки "Попробовать снова"
+            const retryBtn = document.getElementById('retry-btn');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', function() {
+                    document.getElementById('error-container').style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

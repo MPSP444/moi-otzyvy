@@ -1,35 +1,80 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Скрипт формы загружен');
     
-    // Находим все формы на странице
-    const forms = document.querySelectorAll('form');
-    console.log('Найдено форм:', forms.length);
+    // Находим кнопку отправки по классу и типу
+    const submitButton = document.querySelector('button[type="submit"].btn-primary');
+    console.log('Найдена кнопка отправки:', submitButton);
     
-    // Добавляем обработчик ко всем формам
-    forms.forEach(function(form) {
-        console.log('Добавлен обработчик к форме:', form);
-        
-        form.addEventListener('submit', function(event) {
-            // Предотвращаем стандартную отправку формы
+    if (submitButton) {
+        submitButton.addEventListener('click', function(event) {
+            // Предотвращаем стандартное поведение кнопки
             event.preventDefault();
-            console.log('Форма отправлена!');
+            console.log('Кнопка отправки нажата!');
             
-            // Показываем уведомление
-            alert('Спасибо за обратную связь! Ваше сообщение отправлено.');
+            // Получаем значения из полей формы
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const messageInput = document.getElementById('message');
             
-            // Очищаем форму
-            form.reset();
+            if (!nameInput || !emailInput || !messageInput) {
+                alert('Ошибка: не найдены все необходимые поля формы');
+                return;
+            }
+            
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+            const message = messageInput.value.trim();
+            
+            // Проверяем заполнение обязательных полей
+            if (!name || !email || !message) {
+                alert('Пожалуйста, заполните все обязательные поля (имя, email, сообщение)');
+                return;
+            }
+            
+            // Отображаем индикатор загрузки
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = 'Отправка...';
+            submitButton.disabled = true;
+            
+            // Отправляем данные в Firebase
+            fetch('https://ordermanagerreviews-default-rtdb.europe-west1.firebasedatabase.app/contacts.json', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    message: message,
+                    date: new Date().toISOString(),
+                    status: 'new'
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Успешно отправлено:', data);
+                alert('Спасибо за обратную связь! Ваше сообщение отправлено.');
+                
+                // Очищаем поля формы
+                if (nameInput) nameInput.value = '';
+                if (emailInput) emailInput.value = '';
+                if (phoneInput) phoneInput.value = '';
+                if (messageInput) messageInput.value = '';
+            })
+            .catch(error => {
+                console.error('Ошибка отправки:', error);
+                alert('Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте позже.');
+            })
+            .finally(() => {
+                // Восстанавливаем кнопку
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            });
         });
-    });
-    
-    // Также находим все кнопки отправки
-    const submitButtons = document.querySelectorAll('button[type="submit"], input[type="submit"]');
-    console.log('Найдено кнопок отправки:', submitButtons.length);
-    
-    // Добавляем обработчик на случай, если форма не перехватывает событие
-    submitButtons.forEach(function(button) {
-        button.addEventListener('click', function(event) {
-            console.log('Нажата кнопка отправки:', button);
-        });
-    });
+    } else {
+        console.error('Кнопка отправки не найдена!');
+    }
 });

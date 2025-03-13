@@ -13,6 +13,7 @@
             --primary-color: #2196F3;
             --primary-dark: #1976D2;
             --secondary-color: #4CAF50;
+            --error-color: #F44336;
             --background-color: #f8f9fa;
             --card-color: #ffffff;
             --text-color: #333333;
@@ -166,6 +167,7 @@
             font-weight: 500;
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
             display: none;
+            animation: fadeIn 0.5s ease;
         }
 
         .error-container {
@@ -178,6 +180,7 @@
             font-weight: 500;
             box-shadow: 0 4px 15px rgba(198, 40, 40, 0.1);
             display: none;
+            animation: fadeIn 0.5s ease;
         }
 
         .order-info {
@@ -186,6 +189,7 @@
             border-radius: 8px;
             margin-bottom: 30px;
             border-left: 4px solid var(--primary-color);
+            animation: fadeIn 1s ease;
         }
 
         .order-info h3 {
@@ -211,6 +215,12 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         footer {
@@ -250,6 +260,117 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Индикатор силы отзыва */
+        .review-strength {
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .review-strength-bar {
+            height: 100%;
+            width: 0;
+            background-color: #e0e0e0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .review-strength-bar.weak {
+            background-color: #ff5252;
+            width: 25%;
+        }
+
+        .review-strength-bar.medium {
+            background-color: #ffab40;
+            width: 50%;
+        }
+
+        .review-strength-bar.good {
+            background-color: #69f0ae;
+            width: 75%;
+        }
+
+        .review-strength-bar.excellent {
+            background-color: #00c853;
+            width: 100%;
+        }
+
+        .review-strength-text {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: white;
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            max-width: 350px;
+            animation: slideInRight 0.3s, fadeOut 0.5s 3s forwards;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .toast i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .toast.success i {
+            color: var(--secondary-color);
+        }
+
+        .toast.error i {
+            color: var(--error-color);
+        }
+
+        .toast.info i {
+            color: var(--primary-color);
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Улучшения для мобильных устройств */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -266,6 +387,30 @@
             
             .form-container {
                 padding: 20px;
+            }
+
+            .star-rating label {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .order-info {
+                padding: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -312,6 +457,10 @@
                 <div class="form-group">
                     <label for="review-text">Ваш отзыв</label>
                     <textarea id="review-text" class="form-control" required></textarea>
+                    <div class="review-strength">
+                        <div class="review-strength-bar" id="review-strength-bar"></div>
+                    </div>
+                    <div class="review-strength-text" id="review-strength-text">Напишите не менее 20 символов</div>
                     <div class="error-message" id="text-error">Пожалуйста, напишите свой отзыв</div>
                 </div>
                 
@@ -319,7 +468,7 @@
                 <input type="hidden" id="review-service" value="">
                 <input type="hidden" id="review-order-id" value="">
                 
-                <button type="submit" class="btn">Отправить отзыв</button>
+                <button type="submit" class="btn" id="submit-button">Отправить отзыв</button>
                 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
@@ -348,6 +497,11 @@
         </footer>
     </div>
 
+    <!-- Контейнер для уведомлений -->
+    <div class="toast-container" id="toast-container">
+        <!-- Уведомления будут добавляться динамически -->
+    </div>
+
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
@@ -368,6 +522,25 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
+
+        // Функция для создания и показа уведомлений
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            
+            toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            toastContainer.appendChild(toast);
+            
+            // Удаляем уведомление после 3 секунд
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log("DOM загружен, начинаем работу с формой отзыва");
@@ -416,6 +589,33 @@
             });
             document.querySelector('#order-date span').textContent = formattedDate;
             
+            // Индикатор силы отзыва
+            const reviewText = document.getElementById('review-text');
+            const strengthBar = document.getElementById('review-strength-bar');
+            const strengthText = document.getElementById('review-strength-text');
+            
+            reviewText.addEventListener('input', function() {
+                const text = this.value.trim();
+                const length = text.length;
+                
+                if (length === 0) {
+                    strengthBar.className = 'review-strength-bar';
+                    strengthText.textContent = 'Напишите не менее 20 символов';
+                } else if (length < 20) {
+                    strengthBar.className = 'review-strength-bar weak';
+                    strengthText.textContent = 'Слишком коротко';
+                } else if (length < 50) {
+                    strengthBar.className = 'review-strength-bar medium';
+                    strengthText.textContent = 'Средний отзыв';
+                } else if (length < 100) {
+                    strengthBar.className = 'review-strength-bar good';
+                    strengthText.textContent = 'Хороший отзыв';
+                } else {
+                    strengthBar.className = 'review-strength-bar excellent';
+                    strengthText.textContent = 'Отличный отзыв!';
+                }
+            });
+            
             // Обработка отправки формы
             const reviewForm = document.getElementById('review-form');
             if (reviewForm) {
@@ -448,8 +648,10 @@
                     
                     // Проверка текста отзыва
                     const text = document.getElementById('review-text').value.trim();
-                    if (!text) {
+                    if (!text || text.length < 20) {
                         document.getElementById('text-error').style.display = 'block';
+                        document.getElementById('text-error').textContent = 
+                            text.length === 0 ? 'Пожалуйста, напишите свой отзыв' : 'Отзыв должен содержать не менее 20 символов';
                         isValid = false;
                     } else {
                         document.getElementById('text-error').style.display = 'none';
@@ -462,6 +664,11 @@
                             document.getElementById('loading').style.display = 'block';
                             
                             console.log('Начало процесса отправки отзыва...');
+                            
+                            // Анимация кнопки отправки
+                            const submitButton = document.getElementById('submit-button');
+                            submitButton.disabled = true;
+                            submitButton.textContent = 'Отправка...';
                             
                             // Создаем новый отзыв
                             const newReview = {
@@ -496,6 +703,11 @@
                             
                             // Показываем сообщение об успехе
                             document.getElementById('success-message').style.display = 'block';
+                            showToast('Спасибо! Ваш отзыв успешно отправлен.', 'success');
+                            
+                            // Добавляем анимацию к сообщению об успехе
+                            const successMessage = document.getElementById('success-message');
+                            successMessage.style.animation = 'pulse 2s infinite';
                             
                         } catch (error) {
                             console.error('Ошибка при отправке отзыва:', error);
@@ -503,15 +715,22 @@
                             // Скрываем индикатор загрузки
                             document.getElementById('loading').style.display = 'none';
                             
+                            // Восстанавливаем кнопку
+                            submitButton.disabled = false;
+                            submitButton.textContent = 'Отправить отзыв';
+                            
                             // Показываем сообщение об ошибке
                             document.getElementById('error-container').style.display = 'block';
                             document.getElementById('error-message').textContent = 
                                 `Произошла ошибка при отправке отзыва: ${error.message}. Пожалуйста, попробуйте позже.`;
+                            
+                            showToast('Ошибка при отправке отзыва', 'error');
                         }
                     }
                 });
             } else {
                 console.error("Форма отзыва не найдена!");
+                showToast('Ошибка загрузки формы', 'error');
             }
             
             // Обработчик кнопки "Попробовать снова"
@@ -519,6 +738,7 @@
             if (retryBtn) {
                 retryBtn.addEventListener('click', function() {
                     document.getElementById('error-container').style.display = 'none';
+                    document.getElementById('submit-button').disabled = false;
                 });
             }
         });

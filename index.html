@@ -1539,23 +1539,30 @@
    const filterButtons = document.querySelectorAll('.filter-btn');
    const toastContainer = document.getElementById('toast-container');
    
-   // Функция для создания и показа уведомлений
-   function showToast(message, type = 'info') {
-       const toast = document.createElement('div');
-       toast.className = `toast ${type}`;
-       
-       let icon = 'info-circle';
-       if (type === 'success') icon = 'check-circle';
-       if (type === 'error') icon = 'exclamation-circle';
-       
-       toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
-       toastContainer.appendChild(toast);
-       
-       // Удаляем уведомление после 3 секунд
-       setTimeout(() => {
-           toast.remove();
-       }, 3000);
-   }
+   // Функция для показа уведомлений
+    function showToast(message, type = 'info') {
+        const toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            console.error('Контейнер для уведомлений не найден');
+            alert(message); // Запасной вариант - показать стандартное сообщение
+            return;
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        let icon = 'info-circle';
+        if (type === 'success') icon = 'check-circle';
+        if (type === 'error') icon = 'exclamation-circle';
+        
+        toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+        toastContainer.appendChild(toast);
+        
+        // Удаляем уведомление после 3 секунд
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
 
    // Функция для проверки, оценил ли пользователь уже отзыв
    function hasUserRated(reviewId) {
@@ -1948,72 +1955,98 @@
 
    // Обработчик для формы обратной связи
    document.addEventListener('DOMContentLoaded', function() {
-       const contactForm = document.querySelector('.contact-form');
-       
-       if (contactForm) {
-           contactForm.addEventListener('submit', function(e) {
-               e.preventDefault();
-               
-               // Получаем значения полей
-               const name = document.getElementById('name').value.trim();
-               const email = document.getElementById('email').value.trim();
-               const phone = document.getElementById('phone').value.trim();
-               const message = document.getElementById('message').value.trim();
-               
-               // Проверяем заполненность обязательных полей
-               if (!name || !email || !message) {
-                   showToast('Пожалуйста, заполните все обязательные поля (имя, email, сообщение)', 'error');
-                   return;
-               }
-               
-               // Показываем индикатор загрузки
-               const submitBtn = contactForm.querySelector('button[type="submit"]');
-               const originalBtnText = submitBtn.innerHTML;
-               submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
-               submitBtn.disabled = true;
-               
-               // Сохраняем данные в Firebase
-               const contactData = {
-                   name: name,
-                   email: email,
-                   phone: phone,
-                   message: message,
-                   date: new Date().toISOString(),
-                   status: 'new'
-               };
-               
-               try {
-                   // Используем тот же firebase, что и для отзывов
-                   const contactsRef = ref(database, 'contacts');
-                   push(contactsRef, contactData)
-                       .then(() => {
-                           // Показываем сообщение об успехе
-                           showToast('Ваше сообщение успешно отправлено!', 'success');
-                           contactForm.reset();
-                           
-                           // Открываем WhatsApp
-                           const whatsappMessage = `Сообщение с сайта:\n\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone || 'Не указан'}\n\nСообщение: ${message}`;
-                           const encodedMessage = encodeURIComponent(whatsappMessage);
-                           const whatsappUrl = `https://wa.me/79066322571?text=${encodedMessage}`;
-                           window.open(whatsappUrl, '_blank');
-                       })
-                       .catch(error => {
-                           showToast('Произошла ошибка при отправке сообщения', 'error');
-                           console.error('Ошибка отправки формы:', error);
-                       })
-                       .finally(() => {
-                           // Восстанавливаем кнопку
-                           submitBtn.innerHTML = originalBtnText;
-                           submitBtn.disabled = false;
-                       });
-               } catch (error) {
-                   showToast('Произошла ошибка при отправке сообщения', 'error');
-                   console.error('Ошибка отправки формы:', error);
-                   submitBtn.innerHTML = originalBtnText;
-                   submitBtn.disabled = false;
-               }
-           });
-       }
+       // Находим форму контактов по селектору
+        const contactForm = document.querySelector('.contact-form');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log("Форма отправлена");
+                
+                // Получаем значения полей
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const message = document.getElementById('message').value.trim();
+                
+                // Проверяем заполненность обязательных полей
+                if (!name || !email || !message) {
+                    showToast('Пожалуйста, заполните все обязательные поля (имя, email, сообщение)', 'error');
+                    return;
+                }
+                
+                // Показываем индикатор загрузки
+                const submitBtn = contactForm.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+                submitBtn.disabled = true;
+                
+                // Создаем данные для отправки
+                const contactData = {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    message: message,
+                    date: new Date().toISOString(),
+                    status: 'new'
+                };
+                
+                // Отправляем данные в Firebase
+                try {
+                    // Используем функцию fetch вместо прямых вызовов Firebase
+                    const url = "https://ordermanagerreviews-default-rtdb.europe-west1.firebasedatabase.app/contacts.json";
+                    
+                    fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify(contactData),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Успешно отправлено:", data);
+                        
+                        // Показываем сообщение об успехе
+                        showToast('Ваше сообщение успешно отправлено!', 'success');
+                        contactForm.reset();
+                        
+                        // Создаем сообщение для WhatsApp
+                        const whatsappMessage = `Сообщение с сайта:\n\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone || 'Не указан'}\n\nСообщение: ${message}`;
+                        const encodedMessage = encodeURIComponent(whatsappMessage);
+                        const whatsappUrl = `https://wa.me/79066322571?text=${encodedMessage}`;
+                        
+                        // Используем setTimeout для открытия WhatsApp (чтобы дать браузеру время обработать предыдущие действия)
+                        setTimeout(() => {
+                            const newWindow = window.open(whatsappUrl, '_blank');
+                            if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                                console.log('Браузер заблокировал всплывающее окно. Показываем альтернативное сообщение.');
+                                showToast('Пожалуйста, свяжитесь с нами через WhatsApp: +7 906 632-25-71', 'info');
+                            }
+                        }, 500);
+                    })
+                    .catch(error => {
+                        console.error("Ошибка отправки:", error);
+                        showToast('Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте позже.', 'error');
+                    })
+                    .finally(() => {
+                        // Восстанавливаем кнопку
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                    });
+                } catch (error) {
+                    console.error("Критическая ошибка:", error);
+                    showToast('Произошла ошибка при отправке сообщения', 'error');
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            });
+        }
    });
 
    // Настройка кнопки прокрутки вверх

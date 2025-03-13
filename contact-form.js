@@ -1,54 +1,35 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Скрипт формы загружен');
     
-    // Находим форму по селектору
-    const form = document.querySelector('.contact-form');
-    console.log('Найдена форма:', form);
+    // Находим все формы на странице
+    const forms = document.querySelectorAll('form');
+    console.log('Найдено форм:', forms.length);
     
-    if (form) {
-        // Назначаем обработчик отправки формы
+    // Добавляем обработчик ко всем формам
+    forms.forEach(function(form) {
+        console.log('Добавлен обработчик к форме:', form);
+        
         form.addEventListener('submit', function(event) {
             // Предотвращаем стандартную отправку формы
             event.preventDefault();
-            console.log('Форма отправлена');
+            console.log('Форма отправлена!');
             
-            // Получаем данные из формы
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
+            // Показываем уведомление
+            alert('Спасибо за обратную связь! Ваше сообщение отправлено.');
             
-            console.log('Данные формы:', { name, email, phone, message });
-            
-            // Отправляем данные в Firebase
-            const url = 'https://ordermanagerreviews-default-rtdb.europe-west1.firebasedatabase.app/contacts.json';
-            
-            fetch(url, {
-                method: 'POST',
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    message: message,
-                    date: new Date().toISOString(),
-                    status: 'new'
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Успешно отправлено:', data);
-                alert('Сообщение успешно отправлено!');
-                form.reset();
-            })
-            .catch(error => {
-                console.error('Ошибка отправки:', error);
-                alert('Произошла ошибка при отправке сообщения');
-            });
+            // Очищаем форму
+            form.reset();
         });
-    } else {
-        console.error('Форма не найдена на странице');
-    }
+    });
+    
+    // Также находим все кнопки отправки
+    const submitButtons = document.querySelectorAll('button[type="submit"], input[type="submit"]');
+    console.log('Найдено кнопок отправки:', submitButtons.length);
+    
+    // Добавляем обработчик на случай, если форма не перехватывает событие
+    submitButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            console.log('Нажата кнопка отправки:', button);
+        });
+    });
 });

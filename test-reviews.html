@@ -46,6 +46,17 @@
         .success {
             color: green;
         }
+        #raw-response {
+            background-color: #f7f7f7;
+            padding: 10px;
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow: auto;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +98,10 @@
     
     <h2>Список отзывов</h2>
     <button id="load-reviews">Загрузить отзывы</button>
+    <button id="test-connection">Проверить соединение</button>
     <span class="loading" id="load-loading">Загрузка...</span>
+    
+    <div id="raw-response"></div>
     
     <div id="reviews-container">
         <!-- Здесь будут отображаться отзывы -->
@@ -111,6 +125,9 @@
                 try {
                     document.getElementById('load-loading').style.display = 'inline';
                     
+                    console.log("Отправляем запрос на получение данных...");
+                    console.log("URL:", this.apiUrl);
+                    
                     const response = await fetch(this.apiUrl, {
                         method: 'GET',
                         headers: {
@@ -118,22 +135,38 @@
                         }
                     });
                     
+                    console.log("Статус ответа:", response.status);
+                    
                     if (!response.ok) {
                         throw new Error(`Ошибка HTTP: ${response.status}`);
                     }
                     
                     const result = await response.json();
+                    console.log("Получены данные:", result);
                     
                     document.getElementById('load-loading').style.display = 'none';
+                    
+                    // Отображаем сырой ответ для отладки
+                    const rawResponseElem = document.getElementById('raw-response');
+                    rawResponseElem.style.display = 'block';
+                    rawResponseElem.textContent = JSON.stringify(result, null, 2);
                     
                     // JSONBin возвращает данные в формате { record: { ... } }
                     if (result && result.record) {
                         return result.record;
                     }
                     
+                    // Проверяем структуру ответа
+                    if (result) {
+                        if (result.reviews !== undefined) {
+                            return result;
+                        }
+                    }
+                    
                     return this.initialStructure;
                 } catch (error) {
                     document.getElementById('load-loading').style.display = 'none';
+                    console.error("Ошибка при получении данных:", error);
                     showMessage(`Ошибка при получении данных: ${error.message}`, 'error');
                     return this.initialStructure;
                 }
@@ -142,6 +175,8 @@
             // Сохранение данных в JSONBin
             async saveData(data) {
                 try {
+                    console.log("Отправляем данные на сохранение:", data);
+                    
                     const response = await fetch(this.apiUrl, {
                         method: 'PUT',
                         headers: {
@@ -151,14 +186,58 @@
                         body: JSON.stringify(data)
                     });
                     
+                    console.log("Статус ответа при сохранении:", response.status);
+                    
                     if (!response.ok) {
                         throw new Error(`Ошибка HTTP: ${response.status}`);
                     }
                     
                     return await response.json();
                 } catch (error) {
+                    console.error("Ошибка при сохранении данных:", error);
                     showMessage(`Ошибка при сохранении данных: ${error.message}`, 'error');
                     throw error;
+                }
+            }
+            
+            // Тестирование соединения
+            async testConnection() {
+                try {
+                    document.getElementById('load-loading').style.display = 'inline';
+                    showMessage("Проверка соединения...", "info");
+                    
+                    const response = await fetch(this.apiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'X-Master-Key': this.masterKey
+                        }
+                    });
+                    
+                    console.log("Тест соединения - статус ответа:", response.status);
+                    console.log("Тест соединения - заголовки:", response.headers);
+                    
+                    document.getElementById('load-loading').style.display = 'none';
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log("Тест соединения - данные:", data);
+                        
+                        // Отображаем сырой ответ для отладки
+                        const rawResponseElem = document.getElementById('raw-response');
+                        rawResponseElem.style.display = 'block';
+                        rawResponseElem.textContent = JSON.stringify(data, null, 2);
+                        
+                        showMessage("Соединение успешно установлено!", "success");
+                        return true;
+                    } else {
+                        showMessage(`Ошибка соединения: ${response.status} ${response.statusText}`, "error");
+                        return false;
+                    }
+                } catch (error) {
+                    document.getElementById('load-loading').style.display = 'none';
+                    console.error("Ошибка при проверке соединения:", error);
+                    showMessage(`Ошибка при проверке соединения: ${error.message}`, 'error');
+                    return false;
                 }
             }
             
@@ -183,22 +262,26 @@
                         status: "approved"
                     };
                     
-                    // Если массива отзывов нет, создаем его
-                    if (!data.reviews) {
-                        data.reviews = [];
+                    // Если массива отзывов нет, создаем пустую структуру данных
+                    let updatedData = data;
+                    if (!updatedData.reviews) {
+                        updatedData = {
+                            reviews: []
+                        };
                     }
                     
                     // Добавляем отзыв в массив
-                    data.reviews.push(reviewWithId);
+                    updatedData.reviews.push(reviewWithId);
                     
                     // Сохраняем обновленные данные
-                    await this.saveData(data);
+                    await this.saveData(updatedData);
                     
                     document.getElementById('submit-loading').style.display = 'none';
                     
                     return newId;
                 } catch (error) {
                     document.getElementById('submit-loading').style.display = 'none';
+                    console.error("Ошибка при добавлении отзыва:", error);
                     showMessage(`Ошибка при добавлении отзыва: ${error.message}`, 'error');
                     throw error;
                 }
@@ -226,16 +309,17 @@
                     
                     return data.reviews[reviewIndex][reactionType];
                 } catch (error) {
+                    console.error("Ошибка при обновлении реакции:", error);
                     showMessage(`Ошибка при обновлении реакции: ${error.message}`, 'error');
                     throw error;
                 }
             }
         }
         
-        // Инициализация API
+        // Инициализация API с правильным форматом ключа из интерфейса JSONBin
         const api = new SimpleJSONBinAPI(
             "67d39e6a8561e97a50eb9aab", // Bin ID
-            "2a$10 U.spgA59NgzW9tOTIHK/QekIr4DVVruFGSAw2vXAx1Uuxz5zPnnSe" // Master Key
+            "$2a$10$U.spgA59NgzW9tOTIHK/QekIr4DVVruFGSAw2vXAx1Uuxz5zPnnSe" // Master Key из интерфейса
         );
         
         // Функция для отображения сообщений
@@ -363,9 +447,15 @@
             }
         });
         
+        // Обработчик кнопки проверки соединения
+        document.getElementById('test-connection').addEventListener('click', async function() {
+            await api.testConnection();
+        });
+        
         // Загружаем отзывы при загрузке страницы
         window.addEventListener('DOMContentLoaded', async function() {
             try {
+                await api.testConnection();
                 const data = await api.getData();
                 displayReviews(data.reviews);
             } catch (error) {

@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы клиентов | ООО MPSP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary-color: #4CAF50;
+            --error-color: #F44336;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 20px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        /* Hero section */
+        .hero {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(33, 150, 243, 0.05);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .hero-text h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .hero-text p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .hero-text .highlight {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--primary-dark);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            loading: lazy;
+        }
+
+        /* Benefits section */
+        .benefits {
+            margin: 50px 0;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .benefits h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .benefit-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        /* Team section */
+        .team {
+            margin: 50px 0;
+            animation: fadeIn 1.4s ease;
+        }
+
+        .team h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-image {
+            width: 100%;
+            height: 200px;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            loading: lazy;
+        }
+
+        .team-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .team-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .team-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .team-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .team-social a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Discounts section */
+        .discounts {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: var(--shadow);
+            animation: fadeIn 1.6s ease;
+        }
+
+        .discounts h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .discounts p {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .discount-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .discount-table th, .discount-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        .discount-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .discount-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .discount-table tr:hover {
+            background-color: rgba(33, 150, 243, 0.05);
+        }
+
+        /* Reviews section */
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .review-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .review-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .review-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .review-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .review-service {
+            display: inline-block;
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--primary-color);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .stars {
+            color: #FFD700;
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .review-text {
+            margin-top: 15px;
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        .review-response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f8e9;
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 6px;
+        }
+
+        .review-response strong {
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Reaction buttons */
+        .review-reactions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .reaction-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .reaction-button {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .reaction-button i {
+            margin-right: 5px;
+            font-size: 1.1rem;
+        }
+
+        .reaction-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .reaction-button.liked {
+            color: var(--primary-color);
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .reaction-button.disliked {
+            color: var(--error-color);
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+
+        .reaction-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .reaction-stats {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Sharing buttons */
+        .share-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .share-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f1f1;
+            color: var(--text-light);
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .share-button:hover {
+            color: white;
+        }
+
+        .share-button.vk:hover {
+            background-color: #4a76a8;
+        }
+
+        .share-button.telegram:hover {
+            background-color: #0088cc;
+        }
+
+        .share-button.whatsapp:hover {
+            background-color: #25d366;
+        }
+
+        .share-button.copy:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Contact section */
+        .contact {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: var(--shadow);
+            animation: fadeIn 1.8s ease;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            align-items: center;
+        }
+
+        .contact-info {
+            padding-right: 20px;
+        }
+
+        .contact-info p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .contact-info strong {
+            color: var(--primary-color);
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .contact-method i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .contact-method span {
+            font-size: 1.1rem;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            max-width: 600px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            animation: slideInUp 0.4s ease;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* No reviews */
+        .no-reviews {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+        }
+
+        .no-reviews i {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: white;
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            max-width: 350px;
+            animation: slideInRight 0.3s, fadeOut 0.5s 3s forwards;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .toast i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .toast.success i {
+            color: var(--secondary-color);
+        }
+
+        .toast.error i {
+            color: var(--error-color);
+        }
+
+        .toast.info i {
+            color: var(--primary-color);
+        }
+
+        /* Skeleton loading */
+        .skeleton-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .skeleton-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .skeleton-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            margin-right: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-avatar::after,
+        .skeleton-line::after,
+        .skeleton-stars::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .skeleton-info {
+            flex: 1;
+        }
+
+        .skeleton-line {
+            height: 12px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-line:nth-child(1) {
+            width: 60%;
+        }
+
+        .skeleton-line:nth-child(2) {
+            width: 40%;
+        }
+
+        .skeleton-stars {
+            height: 18px;
+            width: 120px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-text {
+            height: 12px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-text:nth-child(1) {
+            width: 100%;
+        }
+
+        .skeleton-text:nth-child(2) {
+            width: 95%;
+        }
+
+        .skeleton-text:nth-child(3) {
+            width: 90%;
+        }
+
+        .skeleton-text:nth-child(4) {
+            width: 80%;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Stats counter */
+        .stats {
+            margin: 50px 0;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            background-color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-column p {
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+            color: var(--text-light);
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px);
+        }
+
+        .spinner {
+            margin: 40px auto;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(33, 150, 243, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {transform: rotate(360deg);}
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+			.contact-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+           header h1 {
+               font-size: 2.2rem;
+           }
+           
+           header p {
+               font-size: 1rem;
+           }
+           
+           .hero-content {
+               flex-direction: column;
+           }
+           
+           .hero-text {
+               padding-right: 0;
+               margin-bottom: 30px;
+           }
+           
+           .reviews-container {
+               grid-template-columns: 1fr;
+           }
+           
+           .modal-content {
+               margin: 20px;
+               max-width: calc(100% - 40px);
+           }
+           
+           .benefit-card, .stat-card {
+               padding: 20px;
+           }
+           
+           .discount-table {
+               font-size: 0.9rem;
+           }
+           
+           .discount-table th, .discount-table td {
+               padding: 10px;
+           }
+       }
+
+       @media (max-width: 480px) {
+           .benefits-grid, .stats-grid {
+               grid-template-columns: 1fr;
+           }
+           
+           .footer-content {
+               grid-template-columns: 1fr;
+           }
+           
+           .hero {
+               padding: 20px;
+           }
+           
+           .discounts, .contact {
+               padding: 20px;
+           }
+       }
+   </style>
+</head>
+<body>
+   <header>
+       <div class="container">
+           <h1>Отзывы наших клиентов</h1>
+           <p>Узнайте, что говорят о нас клиенты и оставьте свой отзыв о нашей работе.</p>
+           <a href="submit-review.html" class="btn btn-primary" id="open-review-form">Оставить отзыв</a>
+       </div>
+   </header>
+
+   <div class="container">
+       <!-- Отзывы клиентов (показываем сразу) -->
+       <h2 style="text-align: center; margin-top: 20px; color: var(--primary-color);">Отзывы наших клиентов</h2>
+       <p style="text-align: center; margin-bottom: 30px;">Узнайте, что говорят о нас те, кто уже воспользовался нашими услугами</p>
+       
+       <div class="filters">
+           <button class="filter-btn active" data-rating="all">Все отзывы</button>
+           <button class="filter-btn" data-rating="5">5 звезд</button>
+           <button class="filter-btn" data-rating="4">4 звезды</button>
+           <button class="filter-btn" data-rating="3">3 звезды</button>
+           <button class="filter-btn" data-rating="2">2 звезды</button>
+           <button class="filter-btn" data-rating="1">1 звезда</button>
+       </div>
+
+       <!-- Скелетон-загрузчики для отображения во время загрузки отзывов -->
+       <div id="skeleton-loader">
+           <div class="skeleton-card">
+               <div class="skeleton-header">
+                   <div class="skeleton-avatar"></div>
+                   <div class="skeleton-info">
+                       <div class="skeleton-line"></div>
+                       <div class="skeleton-line"></div>
+                   </div>
+               </div>
+               <div class="skeleton-stars"></div>
+               <div class="skeleton-text"></div>
+               <div class="skeleton-text"></div>
+               <div class="skeleton-text"></div>
+               <div class="skeleton-text"></div>
+           </div>
+           <div class="skeleton-card">
+               <div class="skeleton-header">
+                   <div class="skeleton-avatar"></div>
+                   <div class="skeleton-info">
+                       <div class="skeleton-line"></div>
+                       <div class="skeleton-line"></div>
+                   </div>
+               </div>
+               <div class="skeleton-stars"></div>
+               <div class="skeleton-text"></div>
+               <div class="skeleton-text"></div>
+               <div class="skeleton-text"></div>
+           </div>
+       </div>
+
+       <div class="spinner" id="spinner"></div>
+       
+       <div class="reviews-container" id="reviews-container">
+           <!-- Отзывы будут загружены из JSONBin через JavaScript -->
+       </div>
+       
+       <!-- Информация о компании -->
+       <section class="hero">
+           <div class="hero-overlay"></div>
+           <div class="hero-content">
+               <div class="hero-text">
+                   <h2>ООО MPSP — ваш надежный помощник с 2017 года</h2>
+                   <p>Мы помогаем студентам успешно преодолевать академические трудности и эффективно выполнять учебные задания. За время работы более <span class="highlight">1000 клиентов</span> доверили нам свое образование.</p>
+                   <p>Наша цель — помочь каждому студенту раскрыть свой потенциал, успешно сдать долги и получить качественное образование. Результаты довольных клиентов вы можете увидеть в отзывах выше.</p>
+                   <p>Наша онлайн-платформа работает с марта 2025 года, предоставляя удобный и современный сервис для всех наших клиентов.</p>
+                   <a href="#discounts" class="btn btn-primary">Узнать о скидках</a>
+                   <a href="#contact" class="btn">Связаться с нами</a>
+               </div>
+               <div class="hero-image">
+                   <img src="https://sun9-38.userapi.com/impg/TUQHO1ANfJCJ8a5JNeQcYHau0aoGs19QnQ040w/Zd7Rvu1qfMI.jpg?size=1280x853&quality=95&sign=4950eb80d611b9f52c599f88b42488ec&type=album" alt="ООО MPSP - студенческий помощник" />
+               </div>
+           </div>
+       </section>
+
+       <!-- Статистика компании -->
+       <section class="stats">
+           <div class="stats-grid">
+               <div class="stat-card">
+                   <div class="stat-number" id="years-count">8+</div>
+                   <div class="stat-label">Лет на рынке</div>
+               </div>
+               <div class="stat-card">
+                   <div class="stat-number" id="clients-count">1000+</div>
+                   <div class="stat-label">Довольных клиентов</div>
+               </div>
+               <div class="stat-card">
+                   <div class="stat-number" id="orders-count">5000+</div>
+                   <div class="stat-label">Выполненных заказов</div>
+               </div>
+               <div class="stat-card">
+                   <div class="stat-number" id="rating">4.8</div>
+                   <div class="stat-label">Средний рейтинг</div>
+               </div>
+           </div>
+       </section>
+
+       <!-- Преимущества компании -->
+       <section class="benefits">
+           <h2>Почему выбирают нас</h2>
+           <div class="benefits-grid">
+               <div class="benefit-card">
+                   <div class="benefit-icon">
+                       <i class="fas fa-check-circle"></i>
+                   </div>
+                   <h3>Качественное выполнение</h3>
+                   <p>Все наши работы выполняются квалифицированными специалистами с учетом всех требований вашего учебного заведения.</p>
+               </div>
+               <div class="benefit-card">
+                   <div class="benefit-icon">
+                       <i class="fas fa-clock"></i>
+                   </div>
+                   <h3>Соблюдение сроков</h3>
+                   <p>Мы ценим ваше время и всегда выполняем заказы в оговоренные сроки, даже при сжатых временных рамках.</p>
+               </div>
+               <div class="benefit-card">
+                   <div class="benefit-icon">
+                       <i class="fas fa-lock"></i>
+                   </div>
+                   <h3>Конфиденциальность</h3>
+                   <p>Гарантируем полную конфиденциальность вашей информации и защиту ваших данных на всех этапах работы.</p>
+               </div>
+               <div class="benefit-card">
+                   <div class="benefit-icon">
+                       <i class="fas fa-comment-dots"></i>
+                   </div>
+                   <h3>Постоянная связь</h3>
+                   <p>Наши менеджеры остаются на связи 24/7, готовы ответить на все вопросы и предоставить необходимую информацию.</p>
+               </div>
+               <div class="benefit-card">
+                   <div class="benefit-icon">
+                       <i class="fas fa-graduation-cap"></i>
+                   </div>
+                   <h3>Опытные специалисты</h3>
+                   <p>Наша команда состоит из профессионалов с высшим образованием и богатым опытом в различных дисциплинах.</p>
+               </div>
+               <div class="benefit-card">
+                   <div class="benefit-icon">
+                       <i class="fas fa-hand-holding-usd"></i>
+                   </div>
+                   <h3>Гибкая система скидок</h3>
+                   <p>Постоянным клиентам предоставляются привлекательные скидки, которые растут с каждым новым заказом.</p>
+               </div>
+           </div>
+       </section>
+
+       <!-- Система скидок -->
+       <section class="discounts" id="discounts">
+           <h2>Наша система скидок</h2>
+           <p>Мы ценим своих клиентов и предлагаем выгодные условия сотрудничества. Чем больше заказов вы делаете, тем больше экономите!</p>
+           
+           <table class="discount-table">
+               <thead>
+                   <tr>
+                       <th>Количество заказов</th>
+                       <th>Скидка</th>
+                       <th>Дополнительные преимущества</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   <tr>
+                       <td>1-2 заказа</td>
+                       <td>5%</td>
+                       <td>Приоритетная поддержка</td>
+                   </tr>
+                   <tr>
+                       <td>3-5 заказов</td>
+                       <td>10%</td>
+                       <td>Ускоренное выполнение</td>
+                   </tr>
+                   <tr>
+                       <td>6-10 заказов</td>
+                       <td>15%</td>
+                       <td>Бесплатные правки</td>
+                   </tr>
+                   <tr>
+                       <td>Более 10 заказов</td>
+                       <td>20%</td>
+                       <td>Персональный менеджер</td>
+                   </tr>
+                   <tr>
+                       <td>Групповой заказ (от 3 человек)</td>
+                       <td>25%</td>
+                       <td>Индивидуальные условия</td>
+                   </tr>
+               </tbody>
+           </table>
+           
+           <p style="text-align: center; margin-top: 30px;">
+               <a href="#contact" class="btn btn-primary">Получить консультацию</a>
+           </p>
+       </section>
+       
+       <!-- Наша команда -->
+       <section class="team">
+           <h2>Наша команда</h2>
+           <p style="text-align: center; margin-bottom: 30px;">Познакомьтесь с людьми, которые помогут вам в вашем учебном пути. Мы постоянно расширяем нашу команду талантливыми специалистами!</p>
+           
+           <div class="team-grid">
+               <div class="team-card">
+                   <div class="team-image">
+                       <img src="https://sun9-33.userapi.com/impg/uO9FfSbgEUt6LYmskQJHfLbUwUcDv1DTRjZRmg/TvWSJn2gDNA.jpg?size=810x1080&quality=95&sign=8ac9f08c9adec077b55a7a2a505fe354&type=album" alt="Мукам Гурбанмурдов" />
+                   </div>
+                   <div class="team-info">
+                       <h3>Мукам Гурбанмурдов</h3>
+                       <p>Основатель и руководитель</p>
+                       <div class="team-social">
+                           <a href="https://vk.com/Gurbanmyradov99" target="_blank"><i class="fab fa-vk"></i></a>
+                           <a href="https://wa.me/79066322571" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                           <a href="mailto:Mukam1@list.ru"><i class="fas fa-envelope"></i></a>
+                       </div>
+                   </div>
+               </div>
+               
+           </div>
+           
+           <div style="text-align: center; margin-top: 40px;">
+               <h3>Присоединяйтесь к нашей команде!</h3>
+               <p>Мы активно набираем талантливых специалистов во всех областях знаний. Если вы профессионал своего дела и хотите помогать студентам, мы ждем вас!</p>
+               <a href="#contact" class="btn">Отправить резюме</a>
+           </div>
+       </section>
+
+       <!-- Контактная информация -->
+       <section class="contact" id="contact">
+           <h2>Свяжитесь с нами</h2>
+           
+           <div class="contact-content">
+               <div class="contact-info">
+                   <p>Есть вопросы или готовы сделать заказ? Свяжитесь с нами любым удобным способом!</p>
+                   
+                   <div class="contact-method">
+                       <i class="fas fa-phone"></i>
+                       <span><strong>Телефон:</strong> +7 906 632-25-71</span>
+                   </div>
+                   
+                   <div class="contact-method">
+                       <i class="fab fa-whatsapp"></i>
+                       <span><strong>WhatsApp:</strong> +7 906 632-25-71</span>
+                   </div>
+                   
+                   <div class="contact-method">
+                       <i class="fab fa-vk"></i>
+                       <span><strong>ВКонтакте:</strong> <a href="https://vk.com/Gurbanmyradov99" target="_blank">Gurbanmyradov99</a></span>
+                   </div>
+                   
+                   <div class="contact-method">
+                       <i class="fas fa-envelope"></i>
+                       <span><strong>Email:</strong> Mukam1@list.ru</span>
+                   </div>
+                   
+                   <p style="margin-top: 30px;">Работаем ежедневно с 9:00 до 21:00 без выходных. Оперативно отвечаем на все обращения!</p>
+               </div>
+               
+               <div class="contact-form">
+                   <div class="form-group">
+                       <label for="name">Ваше имя</label>
+                       <input type="text" id="name" class="form-control" required>
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="email">Email</label>
+                       <input type="email" id="email" class="form-control" required>
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="phone">Телефон</label>
+                       <input type="tel" id="phone" class="form-control">
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="message">Ваше сообщение</label>
+                       <textarea id="message" class="form-control" required></textarea>
+                   </div>
+                   
+                   <button type="submit" class="btn btn-primary">Отправить</button>
+               </div>
+           </div>
+       </section>
+   </div>
+
+   <!-- Контейнер для уведомлений -->
+   <div class="toast-container" id="toast-container">
+       <!-- Уведомления будут добавляться динамически -->
+   </div>
+
+   <div class="scroll-to-top" id="scroll-to-top">
+       <i class="fas fa-arrow-up"></i>
+   </div>
+
+   <footer>
+       <div class="container">
+           <div class="footer-content">
+               <div class="footer-column">
+                   <h3>О компании</h3>
+                   <p>ООО MPSP работает с 2017 года, помогая студентам успешно справляться с учебными задачами и развиваться профессионально.</p>
+                   <div class="footer-social">
+                       <a href="https://vk.com/Gurbanmyradov99" target="_blank"><i class="fab fa-vk"></i></a>
+                       <a href="https://wa.me/79066322571" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                       <a href="mailto:Mukam1@list.ru"><i class="fas fa-envelope"></i></a>
+                   </div>
+               </div>
+               
+               <div class="footer-column">
+                   <h3>Услуги</h3>
+                   <ul>
+                       <li><a href="#">Выполнение контрольных работ</a></li>
+                       <li><a href="#">Написание курсовых работ</a></li>
+                       <li><a href="#">Помощь с дипломными работами</a></li>
+                       <li><a href="#">Решение задач</a></li>
+                       <li><a href="#">Подготовка к экзаменам</a></li>
+                   </ul>
+               </div>
+               
+               <div class="footer-column">
+                   <h3>Информация</h3>
+                   <ul>
+                       <li><a href="#">Как оформить заказ</a></li>
+                       <li><a href="#">Способы оплаты</a></li>
+                       <li><a href="#">Гарантии и конфиденциальность</a></li>
+                       <li><a href="#">Частые вопросы</a></li>
+                       <li><a href="#">Вакансии</a></li>
+                   </ul>
+               </div>
+               
+               <div class="footer-column">
+                   <h3>Контакты</h3>
+                   <p><strong>Телефон:</strong> +7 906 632-25-71</p>
+                   <p><strong>WhatsApp:</strong> +7 906 632-25-71</p>
+                   <p><strong>Email:</strong> Mukam1@list.ru</p>
+                   <p><strong>ВКонтакте:</strong> <a href="https://vk.com/Gurbanmyradov99" target="_blank">Gurbanmyradov99</a></p>
+               </div>
+           </div>
+           
+           <div class="footer-bottom">
+               <p>&copy; 2017-2025 ООО MPSP. Все права защищены.</p>
+               <p>ИП Гурбанмурдов Мукам Ровшенович</p>
+           </div>
+       </div>
+   </footer>
+
+<!-- Подключаем JSONBin API -->
+<script src="jsonbin-api.js"></script>
+
+<!-- JavaScript для загрузки отзывов -->
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+       // Инициализация JSONBin API с необходимыми параметрами
+       const jsonBinApi = new JSONBinAPI(
+           "67d39e6a8561e97a50eb9aab", // Bin ID
+           "$2a$10$U.spgA59NgzW9tOTIHK/QekIr4DVVruFGSAw2vXAx1Uuxz5zPnnSe" // Master Key
+       );
+       
+       // DOM элементы
+       const reviewsContainer = document.getElementById('reviews-container');
+       const spinner = document.getElementById('spinner');
+       const skeletonLoader = document.getElementById('skeleton-loader');
+       const filterButtons = document.querySelectorAll('.filter-btn');
+       const toastContainer = document.getElementById('toast-container');
+       
+       // Функция для показа уведомлений
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                console.error('Контейнер для уведомлений не найден');
+                alert(message); // Запасной вариант - показать стандартное сообщение
+                return;
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            
+            toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            toastContainer.appendChild(toast);
+            
+            // Удаляем уведомление после 3 секунд
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+       // Функция для проверки, оценил ли пользователь уже отзыв
+       function hasUserRated(reviewId) {
+           const ratedReviews = JSON.parse(localStorage.getItem('ratedReviews') || '{}');
+           return reviewId in ratedReviews;
+       }
+
+       // Функция для сохранения оценки пользователя
+       function saveUserRating(reviewId, type) {
+           const ratedReviews = JSON.parse(localStorage.getItem('ratedReviews') || '{}');
+           ratedReviews[reviewId] = type; // тип может быть 'like' или 'dislike'
+           localStorage.setItem('ratedReviews', JSON.stringify(ratedReviews));
+       }
+       
+       // Функция для создания HTML-карточки отзыва
+       function createReviewCard(review) {
+           // Определяем первую букву имени для аватара
+           const firstLetter = review.name ? review.name.charAt(0).toUpperCase() : 'A';
+           
+           // Формируем звезды рейтинга
+           const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+           
+           // Форматируем дату
+           let formattedDate = review.date;
+           try {
+               const dateObj = new Date(review.date);
+               formattedDate = dateObj.toLocaleDateString('ru-RU', {
+                   year: 'numeric',
+                   month: 'long',
+                   day: 'numeric'
+               });
+           } catch(e) {
+               console.error('Ошибка форматирования даты:', e);
+           }
+           
+           // Создаем HTML-разметку для отзыва
+           const card = document.createElement('div');
+           card.className = 'review-card';
+           card.dataset.rating = review.rating;
+           card.setAttribute('data-review-id', review.id);
+           
+           let cardHTML = `
+               <div class="review-header">
+                   <div class="review-avatar">${firstLetter}</div>
+                   <div class="review-info">
+                       <h3>${review.name}</h3>
+                       <div class="review-date">${formattedDate}</div>
+                       <div class="review-service">${review.service}</div>
+                   </div>
+               </div>
+               <div class="stars">${stars}</div>
+               <div class="review-text">${review.text}</div>
+           `;
+           
+           // Если есть ответ администратора, добавляем его
+           if (review.response && review.response.trim() !== '') {
+               cardHTML += `
+                   <div class="review-response">
+                       <strong>Ответ администратора:</strong>
+                       ${review.response}
+                   </div>
+               `;
+           }
+           
+           // Кнопки для лайков и дизлайков
+           cardHTML += `
+               <div class="review-reactions">
+                   <div class="reaction-buttons">
+                       <button class="reaction-button like-button" data-review-id="${review.id}">
+                           <i class="far fa-thumbs-up"></i> Полезно (${review.likes || 0})
+                       </button>
+                       <button class="reaction-button dislike-button" data-review-id="${review.id}">
+                           <i class="far fa-thumbs-down"></i> Бесполезно (${review.dislikes || 0})
+                       </button>
+                   </div>
+                   <div class="reaction-stats">
+                       ${review.likes || 0} из ${(review.likes || 0) + (review.dislikes || 0)} считают полезным
+                   </div>
+               </div>
+           `;
+
+           // Кнопки для поделиться
+           cardHTML += `
+               <div class="share-buttons">
+                   <div class="share-button vk" title="Поделиться в ВК" onclick="shareVk('${encodeURIComponent(review.text)}', '${window.location.href}#review-${review.id}')">
+                       <i class="fab fa-vk"></i>
+                   </div>
+                   <div class="share-button telegram" title="Поделиться в Telegram" onclick="shareTelegram('${encodeURIComponent(review.text)}', '${window.location.href}#review-${review.id}')">
+                       <i class="fab fa-telegram-plane"></i>
+                   </div>
+                   <div class="share-button whatsapp" title="Поделиться в WhatsApp" onclick="shareWhatsApp('${encodeURIComponent(review.text)}', '${window.location.href}#review-${review.id}')">
+                       <i class="fab fa-whatsapp"></i>
+                   </div>
+                   <div class="share-button copy" title="Копировать ссылку" onclick="copyReviewLink('${window.location.href}#review-${review.id}')">
+                       <i class="fas fa-link"></i>
+                   </div>
+               </div>
+           `;
+           
+           card.innerHTML = cardHTML;
+           card.id = `review-${review.id}`;
+           return card;
+       }
+       
+       // Функция для настройки кнопок реакций (лайк/дизлайк)
+       function setupReactionButtons(reviewCard, reviewId) {
+           const likeButton = reviewCard.querySelector('.like-button');
+           const dislikeButton = reviewCard.querySelector('.dislike-button');
+           
+           // Проверяем, оценил ли пользователь уже этот отзыв
+           if (hasUserRated(reviewId)) {
+               const ratedReviews = JSON.parse(localStorage.getItem('ratedReviews') || '{}');
+               const userRating = ratedReviews[reviewId];
+               
+               // Отмечаем активную кнопку и блокируем обе
+               if (userRating === 'like') {
+                   likeButton.classList.add('liked');
+               } else if (userRating === 'dislike') {
+                   dislikeButton.classList.add('disliked');
+               }
+               
+               likeButton.disabled = true;
+               dislikeButton.disabled = true;
+           } else {
+               // Обработчик для кнопки "Полезно"
+               likeButton.addEventListener('click', async () => {
+                   try {
+                       const newLikeCount = await jsonBinApi.updateReaction(reviewId, 'likes');
+                       saveUserRating(reviewId, 'like');
+                       likeButton.classList.add('liked');
+                       likeButton.disabled = true;
+                       dislikeButton.disabled = true;
+                       
+                       // Обновление текста кнопки
+                       likeButton.innerHTML = `<i class="far fa-thumbs-up"></i> Полезно (${newLikeCount})`;
+                       
+                       // Обновление статистики
+                       const statsElement = likeButton.closest('.review-reactions').querySelector('.reaction-stats');
+                       const dislikeCount = parseInt(dislikeButton.textContent.match(/\d+/)[0] || 0);
+                       statsElement.textContent = `${newLikeCount} из ${newLikeCount + dislikeCount} считают полезным`;
+                       
+                       showToast('Спасибо за вашу оценку!', 'success');
+                   } catch (error) {
+                       console.error('Ошибка при обновлении лайка:', error);
+                       showToast('Ошибка при отправке оценки', 'error');
+					   }
+               });
+               
+               // Обработчик для кнопки "Бесполезно"
+               dislikeButton.addEventListener('click', async () => {
+                   try {
+                       const newDislikeCount = await jsonBinApi.updateReaction(reviewId, 'dislikes');
+                       saveUserRating(reviewId, 'dislike');
+                       dislikeButton.classList.add('disliked');
+                       likeButton.disabled = true;
+                       dislikeButton.disabled = true;
+                       
+                       // Обновление текста кнопки
+                       dislikeButton.innerHTML = `<i class="far fa-thumbs-down"></i> Бесполезно (${newDislikeCount})`;
+                       
+                       // Обновление статистики
+                       const statsElement = dislikeButton.closest('.review-reactions').querySelector('.reaction-stats');
+                       const likeCount = parseInt(likeButton.textContent.match(/\d+/)[0] || 0);
+                       statsElement.textContent = `${likeCount} из ${likeCount + newDislikeCount} считают полезным`;
+                       
+                       showToast('Спасибо за вашу оценку!', 'success');
+                   } catch (error) {
+                       console.error('Ошибка при обновлении дизлайка:', error);
+                       showToast('Ошибка при отправке оценки', 'error');
+                   }
+               });
+           }
+       }
+
+       // Функция для поделиться отзывом
+       window.shareVk = function(text, url) {
+           const shareUrl = `https://vk.com/share.php?url=${url}&title=Отзыв о компании MPSP&comment=${text}`;
+           window.open(shareUrl, '_blank');
+           showToast('Ссылка на отзыв скопирована', 'success');
+       };
+
+       window.shareTelegram = function(text, url) {
+           const shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+           window.open(shareUrl, '_blank');
+           showToast('Ссылка на отзыв скопирована', 'success');
+       };
+
+       window.shareWhatsApp = function(text, url) {
+           const shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+           window.open(shareUrl, '_blank');
+           showToast('Ссылка на отзыв скопирована', 'success');
+       };
+
+       window.copyReviewLink = function(url) {
+           navigator.clipboard.writeText(url).then(() => {
+               showToast('Ссылка скопирована в буфер обмена', 'success');
+           }).catch(err => {
+               console.error('Ошибка при копировании: ', err);
+               showToast('Ошибка при копировании ссылки', 'error');
+           });
+       };
+       
+       // Функция для загрузки отзывов с кэшированием
+       async function loadReviews() {
+           try {
+               // Сначала проверяем кэш и отображаем данные из него, если они есть
+               const cachedReviews = localStorage.getItem('cachedReviews');
+               const cachedTimestamp = localStorage.getItem('cachedReviewsTimestamp');
+               const currentTime = new Date().getTime();
+               
+               // Если кэш существует и не старше 1 часа (3600000 мс), используем его
+               if (cachedReviews && cachedTimestamp && (currentTime - parseInt(cachedTimestamp) < 3600000)) {
+                   console.log('Загружаем отзывы из кэша...');
+                   displayReviews(JSON.parse(cachedReviews));
+                   // Скрываем скелетон-загрузчик и спиннер
+                   skeletonLoader.style.display = 'none';
+               } else {
+                   // Показываем скелетон-загрузчик
+                   skeletonLoader.style.display = 'block';
+               }
+               
+               // В любом случае делаем запрос к JSONBin для получения свежих данных
+               console.log('Загружаем отзывы из JSONBin...');
+               spinner.style.display = 'block';
+               
+               // Получаем данные
+               const data = await jsonBinApi.getData();
+               
+               // Скрываем спиннер и скелетон-загрузчик
+               spinner.style.display = 'none';
+               skeletonLoader.style.display = 'none';
+               
+               // Сохраняем данные в кэш
+               localStorage.setItem('cachedReviews', JSON.stringify(data));
+               localStorage.setItem('cachedReviewsTimestamp', currentTime.toString());
+               
+               // Отображаем данные только если мы еще не отобразили их из кэша
+               // или если данные изменились
+               if (!cachedReviews || JSON.stringify(data) !== cachedReviews) {
+                   displayReviews(data);
+               }
+               
+           } catch (error) {
+               console.error("Ошибка при загрузке отзывов:", error);
+               spinner.style.display = 'none';
+               skeletonLoader.style.display = 'none';
+               
+               // Если есть кэш и произошла ошибка, используем кэш
+               const cachedReviews = localStorage.getItem('cachedReviews');
+               if (cachedReviews) {
+                   displayReviews(JSON.parse(cachedReviews));
+                   showToast('Загружены кэшированные отзывы', 'info');
+               } else {
+                   // Показываем сообщение об ошибке
+                   reviewsContainer.innerHTML = `
+                       <div class="no-reviews">
+                           <i class="fas fa-exclamation-circle"></i>
+                           <h3>Ошибка загрузки отзывов</h3>
+                           <p>Пожалуйста, попробуйте обновить страницу позже.</p>
+                       </div>
+                   `;
+                   showToast('Ошибка загрузки отзывов', 'error');
+               }
+           }
+       }
+
+       // Функция для отображения отзывов
+       function displayReviews(data) {
+           // Очищаем контейнер
+           reviewsContainer.innerHTML = '';
+           
+           // Если отзывов нет или массив отзывов отсутствует
+           if (!data || !data.reviews || data.reviews.length === 0) {
+               const noReviews = document.createElement('div');
+               noReviews.className = 'no-reviews';
+               noReviews.innerHTML = `
+                   <i class="far fa-comment-dots"></i>
+                   <h3>Отзывов пока нет</h3>
+                   <p>Будьте первым, кто оставит отзыв о нашей работе!</p>
+               `;
+               reviewsContainer.appendChild(noReviews);
+               return;
+           }
+           
+           // Копируем массив отзывов для сортировки
+           const reviewsArray = [...data.reviews];
+           
+           // Пропускаем отклоненные отзывы или null-данные
+           const filteredReviews = reviewsArray.filter(review => 
+               review && review.status !== 'rejected' && 
+               (review.status === 'approved' || review.status === undefined)
+           );
+           
+           // Сортируем отзывы по дате, новые сверху
+           filteredReviews.sort((a, b) => {
+               const dateA = new Date(a.date || 0);
+               const dateB = new Date(b.date || 0);
+               return dateB - dateA;
+           });
+           
+           // Добавляем отзывы на страницу
+           filteredReviews.forEach((review, index) => {
+               // Создаем карточку отзыва
+               const reviewCard = createReviewCard(review);
+               
+               // Добавляем эффект появления с задержкой
+               setTimeout(() => {
+                   reviewsContainer.appendChild(reviewCard);
+                   setTimeout(() => {
+                       reviewCard.classList.add('visible');
+                   }, 50);
+                   
+                   // Добавляем обработчики для кнопок лайков и дизлайков
+                   setupReactionButtons(reviewCard, review.id);
+                   
+               }, index * 100);
+           });
+           
+           // Настраиваем наблюдатель пересечений для анимации
+           setupIntersectionObserver();
+           
+           // Обновляем статистику
+           updateStatistics(filteredReviews);
+       }
+       
+       // Функция для обновления статистики
+       function updateStatistics(reviews) {
+           if (!reviews || reviews.length === 0) return;
+           
+           // Вычисляем средний рейтинг
+           const totalRating = reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
+           const averageRating = (totalRating / reviews.length).toFixed(1);
+           
+           // Обновляем отображение статистики
+           document.getElementById('rating').textContent = averageRating;
+           document.getElementById('clients-count').textContent = `${reviews.length}+`;
+       }
+
+       // Настраиваем наблюдатель пересечений для анимации
+       function setupIntersectionObserver() {
+           const options = {
+               root: null,
+               rootMargin: '0px',
+               threshold: 0.1
+           };
+           
+           const observer = new IntersectionObserver((entries, observer) => {
+               entries.forEach(entry => {
+                   if (entry.isIntersecting) {
+                       entry.target.classList.add('visible');
+                       observer.unobserve(entry.target); // Прекращаем наблюдение после анимации
+                   }
+               });
+           }, options);
+           
+           // Наблюдаем за всеми карточками отзывов
+           const reviewCards = document.querySelectorAll('.review-card:not(.visible)');
+           reviewCards.forEach(card => {
+               observer.observe(card);
+           });
+       }
+       
+       // Обработчик для кнопок фильтра
+       filterButtons.forEach(button => {
+           button.addEventListener('click', function() {
+               // Удаляем активный класс у всех кнопок
+               filterButtons.forEach(btn => btn.classList.remove('active'));
+               // Добавляем активный класс к нажатой кнопке
+               this.classList.add('active');
+               
+               // Получаем значение фильтра
+               const ratingFilter = this.getAttribute('data-rating');
+               
+               // Фильтруем отзывы
+               const reviewCards = document.querySelectorAll('.review-card');
+               reviewCards.forEach(card => {
+                   if (ratingFilter === 'all' || card.dataset.rating === ratingFilter) {
+                       card.style.display = 'block';
+                   } else {
+                       card.style.display = 'none';
+                   }
+               });
+           });
+       });
+
+       // Обработчик для формы обратной связи
+       document.addEventListener('DOMContentLoaded', function() {
+           // Находим форму контактов по селектору
+            const contactForm = document.querySelector('.contact-form');
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    console.log("Форма отправлена");
+                    
+                    // Получаем значения полей
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const phone = document.getElementById('phone').value.trim();
+                    const message = document.getElementById('message').value.trim();
+                    
+                    // Проверяем заполненность обязательных полей
+                    if (!name || !email || !message) {
+                        showToast('Пожалуйста, заполните все обязательные поля (имя, email, сообщение)', 'error');
+                        return;
+                    }
+                    
+                    // Показываем индикатор загрузки
+                    const submitBtn = contactForm.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        // Создаем данные для отправки
+                        const contactData = {
+                            name: name,
+                            email: email,
+                            phone: phone,
+                            message: message,
+                            date: new Date().toISOString(),
+                            status: 'new'
+                        };
+                        
+                        // Отправляем данные в JSONBin
+                        await jsonBinApi.addContact(contactData);
+                        
+                        // Показываем сообщение об успехе
+                        showToast('Ваше сообщение успешно отправлено!', 'success');
+                        contactForm.reset();
+                        
+                        // Создаем сообщение для WhatsApp
+                        const whatsappMessage = `Сообщение с сайта:\n\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone || 'Не указан'}\n\nСообщение: ${message}`;
+                        const encodedMessage = encodeURIComponent(whatsappMessage);
+                        const whatsappUrl = `https://wa.me/79066322571?text=${encodedMessage}`;
+                        
+                        // Используем setTimeout для открытия WhatsApp (чтобы дать браузеру время обработать предыдущие действия)
+                        setTimeout(() => {
+                            const newWindow = window.open(whatsappUrl, '_blank');
+                            if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                                console.log('Браузер заблокировал всплывающее окно. Показываем альтернативное сообщение.');
+                                showToast('Пожалуйста, свяжитесь с нами через WhatsApp: +7 906 632-25-71', 'info');
+                            }
+                        }, 500);
+                    } catch (error) {
+                        console.error("Ошибка отправки:", error);
+                        showToast('Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте позже.', 'error');
+                    } finally {
+                        // Восстанавливаем кнопку
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+       });
+
+       // Настройка кнопки прокрутки вверх
+       document.addEventListener('DOMContentLoaded', () => {
+           // Настраиваем кнопку прокрутки вверх
+           const scrollToTop = document.getElementById('scroll-to-top');
+           window.addEventListener('scroll', () => {
+               if (window.scrollY > 300) {
+                   scrollToTop.classList.add('visible');
+               } else {
+                   scrollToTop.classList.remove('visible');
+               }
+           });
+           
+           scrollToTop.addEventListener('click', () => {
+               window.scrollTo({
+                   top: 0,
+                   behavior: 'smooth'
+               });
+           });
+
+           // Плавный скроллинг до якорных ссылок
+           document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+               anchor.addEventListener('click', function (e) {
+                   e.preventDefault();
+                   
+                   const targetId = this.getAttribute('href').substring(1);
+                   if (!targetId) return;
+                   
+                   const targetElement = document.getElementById(targetId);
+                   if (targetElement) {
+                       targetElement.scrollIntoView({
+                           behavior: 'smooth'
+                       });
+                   }
+               });
+           });
+           
+           // Загружаем отзывы
+           loadReviews();
+       });
+   });
+</script>
+    <script src="contact-form.js"></script>
+</body>
+</html>
+					   
+					   

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONBin Диагностика и исправление</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+            max-height: 300px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+        .danger {
+            background-color: #ea4335;
+        }
+        .danger:hover {
+            background-color: #d33828;
+        }
+        .success {
+            background-color: #34a853;
+        }
+        .success:hover {
+            background-color: #2d9146;
+        }
+        .info {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-left: 4px solid #4285f4;
+            border-radius: 4px;
+        }
+        .error {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #fdeded;
+            border-left: 4px solid #ea4335;
+            border-radius: 4px;
+        }
+        .success-msg {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #e6f4ea;
+            border-left: 4px solid #34a853;
+            border-radius: 4px;
+        }
+        .section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        .json-editor {
+            width: 100%;
+            height: 300px;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>JSONBin Диагностика и исправление</h1>
+
+    <div id="status-messages"></div>
+
+    <div class="section">
+        <h2>1. Диагностика</h2>
+        <p>Проверка соединения и текущих данных в JSONBin.</p>
+        <button id="get-data">Получить данные</button>
+        <button id="check-connection">Проверить соединение</button>
+        <div id="connection-result"></div>
+        <h3>Текущие данные:</h3>
+        <pre id="current-data">Данные не загружены</pre>
+    </div>
+
+    <div class="section">
+        <h2>2. Исправление структуры</h2>
+        <p>Исправление структуры данных для правильной работы с отзывами.</p>
+        <button id="fix-structure" class="success">Исправить структуру</button>
+        <button id="create-sample-review" class="success">Создать тестовый отзыв</button>
+        <div id="fix-result"></div>
+    </div>
+
+    <div class="section">
+        <h2>3. Полный сброс (осторожно!)</h2>
+        <p>Полностью сбросить все данные и создать новую структуру. <strong>Все существующие данные будут удалены!</strong></p>
+        <button id="reset-data" class="danger">Сбросить все данные</button>
+        <div id="reset-result"></div>
+    </div>
+
+    <div class="section">
+        <h2>4. Ручное редактирование</h2>
+        <p>Вручную отредактируйте JSON данные и сохраните их.</p>
+        <textarea id="json-editor" class="json-editor"></textarea>
+        <button id="save-json" class="success">Сохранить JSON</button>
+        <div id="save-result"></div>
+    </div>
+
+    <script>
+        // Константы
+        const BIN_ID = "67d39e6a8561e97a50eb9aab";
+        const MASTER_KEY = "$2a$10$U.spgA59NgzW9tOTIHK/QekIr4DVVruFGSAw2vXAx1Uuxz5zPnnSe";
+        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        
+        // Исходная структура данных
+        const INITIAL_STRUCTURE = {
+            reviews: [],
+            contacts: []
+        };
+
+        // Функция для добавления сообщений на страницу
+        function addMessage(message, type = 'info') {
+            const container = document.getElementById('status-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error' : (type === 'success' ? 'success-msg' : 'info');
+            messageDiv.textContent = message;
+            container.appendChild(messageDiv);
+
+            // Прокручиваем к сообщению
+            messageDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Функция для проверки соединения
+        async function checkConnection() {
+            const resultContainer = document.getElementById('connection-result');
+            resultContainer.innerHTML = '<p>Проверка соединения...</p>';
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': MASTER_KEY
+                    }
+                });
+                
+                if (response.ok) {
+                    resultContainer.innerHTML = '<p style="color: green;">✓ Соединение успешно установлено</p>';
+                    addMessage('Соединение с JSONBin успешно установлено', 'success');
+                    return true;
+                } else {
+                    resultContainer.innerHTML = 
+                        `<p style="color: red;">✗ Ошибка соединения: ${response.status} ${response.statusText}</p>
+                         <p>Проверьте ID бина и Master Key</p>`;
+                    addMessage(`Ошибка соединения: ${response.status} ${response.statusText}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                resultContainer.innerHTML = 
+                    `<p style="color: red;">✗ Ошибка соединения: ${error.message}</p>
+                     <p>Проверьте подключение к интернету и доступность JSONBin</p>`;
+                addMessage(`Ошибка соединения: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        // Функция для получения данных
+        async function getData() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': MASTER_KEY
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // JSONBin возвращает данные в формате { record: { ... } }
+                if (result && result.record) {
+                    return result.record;
+                }
+                
+                return result;
+            } catch (error) {
+                console.error("Ошибка при получении данных:", error);
+                addMessage(`Ошибка при получении данных: ${error.message}`, 'error');
+                return null;
+            }
+        }
+        
+        // Функция для сохранения данных
+        async function saveData(data) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': MASTER_KEY
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error("Ошибка при сохранении данных:", error);
+                addMessage(`Ошибка при сохранении данных: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+        
+        // Функция для исправления структуры данных
+        async function fixStructure() {
+            const resultContainer = document.getElementById('fix-result');
+            resultContainer.innerHTML = '<p>Исправление структуры данных...</p>';
+            
+            try {
+                // Получаем текущие данные
+                const currentData = await getData();
+                
+                if (!currentData) {
+                    throw new Error("Не удалось получить текущие данные");
+                }
+                
+                // Создаем правильную структуру на основе текущих данных
+                const fixedData = {
+                    reviews: Array.isArray(currentData.reviews) ? currentData.reviews : [],
+                    contacts: Array.isArray(currentData.contacts) ? currentData.contacts : []
+                };
+                
+                // Если структура была неправильной, исправляем ее
+                if (!Array.isArray(currentData.reviews) || !Array.isArray(currentData.contacts)) {
+                    await saveData(fixedData);
+                    resultContainer.innerHTML = '<p style="color: green;">✓ Структура данных успешно исправлена</p>';
+                    addMessage('Структура данных успешно исправлена', 'success');
+
+                    // Обновляем отображение данных
+                    document.getElementById('current-data').textContent = 
+                        JSON.stringify(fixedData, null, 2);
+                    
+                    // Обновляем редактор JSON
+                    document.getElementById('json-editor').value = 
+                        JSON.stringify(fixedData, null, 2);
+                } else {
+                    resultContainer.innerHTML = '<p>Структура данных уже корректна</p>';
+                    addMessage('Структура данных уже корректна', 'info');
+                }
+                
+                return fixedData;
+            } catch (error) {
+                resultContainer.innerHTML = 
+                    `<p style="color: red;">✗ Ошибка при исправлении структуры: ${error.message}</p>`;
+                addMessage(`Ошибка при исправлении структуры: ${error.message}`, 'error');
+                return null;
+            }
+        }
+        
+        // Функция для сброса данных
+        async function resetData() {
+            const resultContainer = document.getElementById('reset-result');
+            resultContainer.innerHTML = '<p>Сброс данных...</p>';
+            
+            if (!confirm("Вы уверены? Это действие удалит ВСЕ данные и создаст новую пустую структуру.")) {
+                resultContainer.innerHTML = '<p>Сброс отменен</p>';
+                return;
+            }
+            
+            try {
+                // Сохраняем исходную структуру
+                await saveData(INITIAL_STRUCTURE);
+                
+                resultContainer.innerHTML = '<p style="color: green;">✓ Данные успешно сброшены</p>';
+                addMessage('Данные успешно сброшены и создана новая структура', 'success');
+                
+                // Обновляем отображение данных
+                document.getElementById('current-data').textContent = 
+                    JSON.stringify(INITIAL_STRUCTURE, null, 2);
+                
+                // Обновляем редактор JSON
+                document.getElementById('json-editor').value = 
+                    JSON.stringify(INITIAL_STRUCTURE, null, 2);
+                
+                return INITIAL_STRUCTURE;
+            } catch (error) {
+                resultContainer.innerHTML = 
+                    `<p style="color: red;">✗ Ошибка при сбросе данных: ${error.message}</p>`;
+                addMessage(`Ошибка при сбросе данных: ${error.message}`, 'error');
+                return null;
+            }
+        }
+        
+        // Функция для создания тестового отзыва
+        async function createSampleReview() {
+            const resultContainer = document.getElementById('fix-result');
+            resultContainer.innerHTML = '<p>Создание тестового отзыва...</p>';
+            
+            try {
+                // Получаем текущие данные
+                const currentData = await getData();
+                
+                if (!currentData) {
+                    throw new Error("Не удалось получить текущие данные");
+                }
+                
+                // Проверяем структуру
+                let updatedData = { ...currentData };
+                
+                // Если нет массива отзывов, создаем его
+                if (!Array.isArray(updatedData.reviews)) {
+                    updatedData.reviews = [];
+                }
+                
+                // Создаем тестовый отзыв
+                const sampleReview = {
+                    id: `test_${Date.now()}`,
+                    name: "Тестовый пользователь",
+                    rating: 5,
+                    text: "Это тестовый отзыв для диагностики. Всё работает отлично!",
+                    service: "Тестовая услуга",
+                    date: new Date().toISOString(),
+                    timestamp: new Date().toISOString(),
+                    status: "approved",
+                    likes: 0,
+                    dislikes: 0
+                };
+                
+                // Добавляем отзыв в массив
+                updatedData.reviews.push(sampleReview);
+                
+                // Сохраняем обновленные данные
+                await saveData(updatedData);
+                
+                resultContainer.innerHTML = '<p style="color: green;">✓ Тестовый отзыв успешно создан</p>';
+                addMessage('Тестовый отзыв успешно создан', 'success');
+                
+                // Обновляем отображение данных
+                document.getElementById('current-data').textContent = 
+                    JSON.stringify(updatedData, null, 2);
+                
+                // Обновляем редактор JSON
+                document.getElementById('json-editor').value = 
+                    JSON.stringify(updatedData, null, 2);
+                
+                return updatedData;
+            } catch (error) {
+                resultContainer.innerHTML = 
+                    `<p style="color: red;">✗ Ошибка при создании тестового отзыва: ${error.message}</p>`;
+                addMessage(`Ошибка при создании тестового отзыва: ${error.message}`, 'error');
+                return null;
+            }
+        }
+        
+        // Обработчики событий
+        document.getElementById('get-data').addEventListener('click', async () => {
+            const data = await getData();
+            if (data) {
+                document.getElementById('current-data').textContent = 
+                    JSON.stringify(data, null, 2);
+                
+                // Заполняем редактор JSON
+                document.getElementById('json-editor').value = 
+                    JSON.stringify(data, null, 2);
+                
+                addMessage('Данные успешно загружены', 'success');
+            }
+        });
+        
+        document.getElementById('check-connection').addEventListener('click', checkConnection);
+        document.getElementById('fix-structure').addEventListener('click', fixStructure);
+        document.getElementById('reset-data').addEventListener('click', resetData);
+        document.getElementById('create-sample-review').addEventListener('click', createSampleReview);
+        
+        document.getElementById('save-json').addEventListener('click', async () => {
+            const resultContainer = document.getElementById('save-result');
+            resultContainer.innerHTML = '<p>Сохранение JSON...</p>';
+            
+            try {
+                // Получаем JSON из редактора
+                const jsonText = document.getElementById('json-editor').value;
+                let jsonData;
+                
+                try {
+                    jsonData = JSON.parse(jsonText);
+                } catch (jsonError) {
+                    throw new Error(`Некорректный JSON: ${jsonError.message}`);
+                }
+                
+                // Сохраняем данные
+                await saveData(jsonData);
+                
+                resultContainer.innerHTML = '<p style="color: green;">✓ JSON успешно сохранен</p>';
+                addMessage('JSON успешно сохранен', 'success');
+                
+                // Обновляем отображение данных
+                document.getElementById('current-data').textContent = 
+                    JSON.stringify(jsonData, null, 2);
+            } catch (error) {
+                resultContainer.innerHTML = 
+                    `<p style="color: red;">✗ Ошибка при сохранении JSON: ${error.message}</p>`;
+                addMessage(`Ошибка при сохранении JSON: ${error.message}`, 'error');
+            }
+        });
+        
+        // При загрузке страницы проверяем соединение и загружаем данные
+        window.addEventListener('DOMContentLoaded', async () => {
+            await checkConnection();
+            const data = await getData();
+            if (data) {
+                document.getElementById('current-data').textContent = 
+                    JSON.stringify(data, null, 2);
+                
+                // Заполняем редактор JSON
+                document.getElementById('json-editor').value = 
+                    JSON.stringify(data, null, 2);
+            }
+        });
+    </script>
+</body>
+</html>
